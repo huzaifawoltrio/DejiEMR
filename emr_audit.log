@@ -1336,3 +1336,27 @@ LINE 1: ...ip_address, user_agent, success, details) VALUES ('rootadmin...
 2025-08-19 15:21:48,331 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:21:48] "[35m[1mPOST /api/auth/register HTTP/1.1[0m" 201 -
 2025-08-19 15:22:15,381 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
 2025-08-19 15:22:15,381 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:22:15] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-19 15:51:24,742 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-19 15:51:24,742 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-19 15:51:24,744 - werkzeug - INFO -  * Restarting with stat
+2025-08-19 15:51:26,206 - werkzeug - WARNING -  * Debugger is active!
+2025-08-19 15:51:26,218 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-19 15:51:29,662 - HIPAA_AUDIT - INFO - Action='DOCTOR_REGISTRATION', Resource='doctors', UserID='4', Success='True', Details='Request successful. Status: 201'
+2025-08-19 15:51:29,662 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:51:29] "[35m[1mPOST /api/doctors/register HTTP/1.1[0m" 201 -
+2025-08-19 16:04:14,061 - werkzeug - INFO -  * Detected change in 'E:\\woltrio\\DejiEMRAPI\\app\\api\\controllers\\doctor_controller.py', reloading
+2025-08-19 16:04:14,328 - werkzeug - INFO -  * Restarting with stat
+2025-08-19 16:04:16,413 - werkzeug - WARNING -  * Debugger is active!
+2025-08-19 16:04:16,425 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-19 16:07:52,691 - HIPAA_AUDIT - INFO - Action='DOCTOR_REGISTRATION', Resource='doctors', UserID='5', Success='True', Details='Request successful. Status: 201'
+2025-08-19 16:07:52,692 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 16:07:52] "[35m[1mPOST /api/doctors/register HTTP/1.1[0m" 201 -
+2025-08-19 16:08:34,326 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-19 16:08:34,326 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 16:08:34] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-19 16:24:51,519 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-19 16:24:51,520 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-19 16:24:51,523 - werkzeug - INFO -  * Restarting with stat
+2025-08-19 16:24:53,118 - werkzeug - WARNING -  * Debugger is active!
+2025-08-19 16:24:53,128 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-19 16:24:54,632 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-19 16:24:54,632 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 16:24:54] "POST /api/auth/login HTTP/1.1" 200 -
