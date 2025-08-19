@@ -1,0 +1,45 @@
+2025-08-19 10:41:41,279 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://127.0.0.1:5000
+2025-08-19 10:41:41,279 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-19 10:42:53,505 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 10:42:53] "[33mGET / HTTP/1.1[0m" 404 -
+2025-08-19 10:42:53,638 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 10:42:53] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-08-19 10:44:09,086 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 10:44:09] "[31m[1mGET /api/auth/register HTTP/1.1[0m" 405 -
+2025-08-19 10:56:36,082 - HIPAA_AUDIT - INFO - Action: USER_REGISTRATION, User: None, Resource: users, IP: 127.0.0.1
+2025-08-19 10:56:36,084 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 10:56:36] "[31m[1mPOST /api/auth/register HTTP/1.1[0m" 400 -
+2025-08-19 10:56:54,628 - HIPAA_AUDIT - INFO - Action: USER_REGISTRATION, User: None, Resource: users, IP: 127.0.0.1
+2025-08-19 10:56:54,628 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 10:56:54] "[35m[1mPOST /api/auth/register HTTP/1.1[0m" 201 -
+2025-08-19 10:58:15,795 - HIPAA_AUDIT - INFO - Action: USER_LOGIN, User: None, Resource: authentication, IP: 127.0.0.1
+2025-08-19 10:58:15,795 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 10:58:15] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-19 11:00:20,838 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 11:00:20] "[31m[1mGET /api/patients HTTP/1.1[0m" 401 -
+2025-08-19 11:00:52,540 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 11:00:52] "[31m[1mGET /api/patients HTTP/1.1[0m" 401 -
+2025-08-19 11:11:03,001 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 11:11:03] "[31m[1mGET /api/patients HTTP/1.1[0m" 401 -
+2025-08-19 11:14:14,991 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://127.0.0.1:5000
+2025-08-19 11:14:14,991 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-19 11:14:22,824 - HIPAA_AUDIT - INFO - Action: USER_LOGIN, User: None, Resource: authentication, IP: 127.0.0.1
+2025-08-19 11:14:22,824 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 11:14:22] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-19 11:14:26,251 - HIPAA_AUDIT - INFO - Action: USER_LOGIN, User: None, Resource: authentication, IP: 127.0.0.1
+2025-08-19 11:14:26,251 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 11:14:26] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-19 11:14:56,914 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 11:14:56] "[31m[1mGET /api/patients HTTP/1.1[0m" 401 -
+2025-08-19 11:15:10,466 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 11:15:10] "[31m[1mGET /api/patients HTTP/1.1[0m" 401 -
+2025-08-19 11:15:28,780 - HIPAA_AUDIT - INFO - Action: USER_LOGIN, User: None, Resource: authentication, IP: 127.0.0.1
+2025-08-19 11:15:28,781 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 11:15:28] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-19 11:15:55,798 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 11:15:55] "[31m[1mGET /api/patients HTTP/1.1[0m" 401 -
+2025-08-19 11:20:37,169 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 11:20:37] "[31m[1mGET /api/patients HTTP/1.1[0m" 401 -
+2025-08-19 11:21:05,032 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 11:21:05] "[31m[1mGET /api/patients HTTP/1.1[0m" 401 -
+2025-08-19 11:21:28,480 - HIPAA_AUDIT - INFO - Action: USER_LOGIN, User: None, Resource: authentication, IP: 127.0.0.1
+2025-08-19 11:21:28,481 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 11:21:28] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-19 11:21:59,178 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 11:21:59] "[31m[1mGET /api/patients HTTP/1.1[0m" 401 -
+2025-08-19 11:22:05,677 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 11:22:05] "[31m[1mGET /api/patients HTTP/1.1[0m" 401 -
+2025-08-19 11:24:41,701 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://127.0.0.1:5000
+2025-08-19 11:24:41,701 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-19 11:24:46,874 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 11:24:46] "[31m[1mGET /api/patients HTTP/1.1[0m" 401 -
+2025-08-19 11:25:43,968 - HIPAA_AUDIT - INFO - Action: USER_LOGIN, User: None, Resource: authentication, IP: 127.0.0.1
+2025-08-19 11:25:43,968 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 11:25:43] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-19 11:26:03,580 - HIPAA_AUDIT - INFO - Action: VIEW_PATIENTS, User: 1, Resource: patients, IP: 127.0.0.1
+2025-08-19 11:26:03,580 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 11:26:03] "GET /api/patients HTTP/1.1" 200 -
+2025-08-19 11:32:51,849 - HIPAA_AUDIT - INFO - Action: USER_LOGIN, User: None, Resource: authentication, IP: 127.0.0.1
+2025-08-19 11:32:51,857 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 11:32:51] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-19 11:33:10,502 - HIPAA_AUDIT - INFO - Action: VIEW_PATIENTS, User: 1, Resource: patients, IP: 127.0.0.1
+2025-08-19 11:33:10,502 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 11:33:10] "GET /api/patients HTTP/1.1" 200 -
