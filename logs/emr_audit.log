@@ -1,0 +1,16 @@
+2025-08-19 12:19:30,336 - HIPAA_AUDIT - ERROR - Login failed: (psycopg2.OperationalError) connection to server at "localhost" (::1), port 5432 failed: FATAL:  password authentication failed for user "user"
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+2025-08-19 12:19:30,406 - HIPAA_AUDIT - ERROR - Internal server error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2025-08-19 12:19:37,119 - HIPAA_AUDIT - ERROR - Login failed: (psycopg2.OperationalError) connection to server at "localhost" (::1), port 5432 failed: FATAL:  password authentication failed for user "user"
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+2025-08-19 12:19:37,177 - HIPAA_AUDIT - ERROR - Internal server error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2025-08-19 12:19:48,980 - HIPAA_AUDIT - ERROR - Login failed: (psycopg2.OperationalError) connection to server at "localhost" (::1), port 5432 failed: FATAL:  password authentication failed for user "user"
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+2025-08-19 12:19:49,047 - HIPAA_AUDIT - ERROR - Internal server error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2025-08-19 12:24:09,860 - HIPAA_AUDIT - ERROR - Login failed: (psycopg2.OperationalError) connection to server at "localhost" (::1), port 5432 failed: FATAL:  password authentication failed for user "user"
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+2025-08-19 12:24:09,910 - HIPAA_AUDIT - ERROR - Internal server error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
