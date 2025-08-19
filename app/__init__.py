@@ -4,6 +4,7 @@ from flask import Flask, jsonify
 from config import Config
 from .extensions import db, bcrypt, migrate, jwt, limiter, cors
 from .models.system_models import RevokedToken
+from .utils.encryption_util import encryptor as app_encryptor # Import the instance
 
 def create_app(config_class=Config):
     """Application factory"""
@@ -21,6 +22,9 @@ def create_app(config_class=Config):
     jwt.init_app(app)
     limiter.init_app(app)
     cors.init_app(app, origins=app.config['ALLOWED_ORIGINS'], supports_credentials=True)
+
+    # Initialize our custom encryptor here
+    app_encryptor.init_app(app)
     
     # Initialize logging
     config_class.init_app(app)

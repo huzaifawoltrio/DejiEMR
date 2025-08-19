@@ -1201,3 +1201,138 @@ LINE 1: ...ip_address, user_agent, success, details) VALUES ('rootadmin...
 2025-08-19 13:53:48,635 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 13:53:48] "POST /api/auth/login HTTP/1.1" 200 -
 2025-08-19 13:54:01,361 - HIPAA_AUDIT - INFO - Action='VIEW_PATIENTS', Resource='patients', UserID='1', Success='True', Details='Request successful. Status: 200'
 2025-08-19 13:54:01,362 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 13:54:01] "GET /api/patients HTTP/1.1" 200 -
+2025-08-19 14:20:13,840 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://127.0.0.1:5000
+2025-08-19 14:20:13,840 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-19 14:20:13,841 - werkzeug - INFO -  * Restarting with stat
+2025-08-19 14:20:14,698 - werkzeug - WARNING -  * Debugger is active!
+2025-08-19 14:20:14,703 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-19 14:25:51,554 - werkzeug - INFO -  * Detected change in 'E:\\woltrio\\DejiEMRAPI\\app\\api\\controllers\\auth_controller.py', reloading
+2025-08-19 14:25:51,816 - werkzeug - INFO -  * Restarting with stat
+2025-08-19 14:25:52,921 - werkzeug - WARNING -  * Debugger is active!
+2025-08-19 14:25:52,925 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-19 14:26:04,254 - werkzeug - INFO -  * Detected change in 'E:\\woltrio\\DejiEMRAPI\\app\\api\\controllers\\user_controller.py', reloading
+2025-08-19 14:26:04,390 - werkzeug - INFO -  * Restarting with stat
+2025-08-19 14:26:05,360 - werkzeug - WARNING -  * Debugger is active!
+2025-08-19 14:26:05,366 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-19 14:26:12,176 - werkzeug - INFO -  * Detected change in 'E:\\woltrio\\DejiEMRAPI\\app\\api\\controllers\\patient_controller.py', reloading
+2025-08-19 14:26:12,320 - werkzeug - INFO -  * Restarting with stat
+2025-08-19 14:26:13,360 - werkzeug - WARNING -  * Debugger is active!
+2025-08-19 14:26:13,366 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-19 14:26:27,948 - werkzeug - INFO -  * Detected change in 'E:\\woltrio\\DejiEMRAPI\\app\\api\\routes.py', reloading
+2025-08-19 14:26:28,168 - werkzeug - INFO -  * Restarting with stat
+2025-08-19 14:26:29,208 - werkzeug - WARNING -  * Debugger is active!
+2025-08-19 14:26:29,213 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-19 14:26:32,752 - werkzeug - INFO -  * Detected change in 'E:\\woltrio\\DejiEMRAPI\\app\\api\\routes.py', reloading
+2025-08-19 14:26:32,875 - werkzeug - INFO -  * Restarting with stat
+2025-08-19 14:26:37,223 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://127.0.0.1:5000
+2025-08-19 14:26:37,224 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-19 14:26:37,225 - werkzeug - INFO -  * Restarting with stat
+2025-08-19 14:26:38,083 - werkzeug - WARNING -  * Debugger is active!
+2025-08-19 14:26:38,087 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-19 14:26:42,647 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-19 14:26:42,648 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 14:26:42] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-19 14:27:24,857 - HIPAA_AUDIT - INFO - Action='VIEW_PATIENTS', Resource='patients', UserID='1', Success='True', Details='Request successful. Status: 200'
+2025-08-19 14:27:24,858 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 14:27:24] "GET /api/patients HTTP/1.1" 200 -
+2025-08-19 14:33:50,056 - werkzeug - INFO -  * Detected change in 'E:\\woltrio\\DejiEMRAPI\\app\\utils\\encryption_util.py', reloading
+2025-08-19 14:33:50,209 - werkzeug - INFO -  * Restarting with stat
+2025-08-19 14:33:51,328 - werkzeug - WARNING -  * Debugger is active!
+2025-08-19 14:33:51,333 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-19 14:34:27,215 - werkzeug - INFO -  * Detected change in 'E:\\woltrio\\DejiEMRAPI\\app\\api\\controllers\\auth_controller.py', reloading
+2025-08-19 14:34:27,397 - werkzeug - INFO -  * Restarting with stat
+2025-08-19 14:43:23,885 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-19 14:43:23,885 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-19 14:43:23,887 - werkzeug - INFO -  * Restarting with stat
+2025-08-19 14:43:24,755 - werkzeug - WARNING -  * Debugger is active!
+2025-08-19 14:43:24,759 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-19 14:44:02,197 - werkzeug - ERROR - 127.0.0.1 - - [19/Aug/2025 14:44:02] code 400, message Bad request version ('¿\x13¿')
+2025-08-19 14:44:02,198 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 14:44:02] "[31m[1m\x16\x03\x01\x00Â\x01\x00\x00·\x03\x03\x9eM9\\Û‚Ë\x9e(Z‰´\x93Kl◊u\x98@\x07NGÈ€\x05\x01™…‚‹c≠ Ï&9P·\x01æ⁄cÍn‚KL¿ \x80¨ﬂ–\x02\x98\x9d’Œ\x17>•\x19o‘e\x00$\x13\x01\x13\x02\x13\x03¿/¿+¿0¿,¿'Ã©Ã®¿\x09¿\x13¿[0m" 400 -
+2025-08-19 14:44:19,662 - werkzeug - ERROR - 127.0.0.1 - - [19/Aug/2025 14:44:19] code 400, message Bad request version ('¿\x13¿')
+2025-08-19 14:44:19,662 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 14:44:19] "[31m[1m\x16\x03\x01\x00Â\x01\x00\x00·\x03\x03(Ó[NÍ\x0f\x0cJ SmL¶,\x1e\x8a2º•ª\x9dŸ®Iƒ£Î\x82\x95\x07'œ Á\x1dH≠Áu=J}Õ≥†!\x1fLbqw\x95T…Àz3ÈË⁄\x8fÌ#\x13\x00$\x13\x01\x13\x02\x13\x03¿/¿+¿0¿,¿'Ã©Ã®¿\x09¿\x13¿[0m" 400 -
+2025-08-19 14:46:11,451 - app - ERROR - Decryption failed: Invalid token provided.
+2025-08-19 14:46:11,451 - app - ERROR - Decryption failed: Invalid token provided.
+2025-08-19 14:46:11,726 - HIPAA_AUDIT - ERROR - Failed to log audit entry due to DB error: This Session's transaction has been rolled back due to a previous exception during flush. To begin a new transaction with this Session, first issue Session.rollback(). Original exception was: (psycopg2.errors.StringDataRightTruncation) value too long for type character varying(80)
+
+[SQL: INSERT INTO users (username, email, password_hash, role_id, created_at, updated_at, last_login, failed_login_attempts, account_locked, account_locked_until, password_changed_at, must_change_password, is_active) VALUES (%(username)s, %(email)s, %(password_hash)s, %(role_id)s, %(created_at)s, %(updated_at)s, %(last_login)s, %(failed_login_attempts)s, %(account_locked)s, %(account_locked_until)s, %(password_changed_at)s, %(must_change_password)s, %(is_active)s) RETURNING users.id]
+[parameters: {'username': 'gAAAAABopEfjgOFNnoPurVheZucMgOMf_Ex1IFj7lY3hy-i8z9SYbg7fDiWEZRLrS2rReqOQC-JukIx1TzsC2GTUjV8OEhcY_Q==', 'email': 'gAAAAABopEfjJTpSX3YZM-Z_YbJ2BMWxpJokZt9C53helrlMzT2hy9zwbSHufTXG2K01kAAjumRpcUXmP88DuF8Cp3Fx4ktEr25p-98lUXwgPM0vWMDDuSU=', 'password_hash': '$2b$12$Uq0HC188H14k3Nop1jl7zuNPYR3.qHrEU7ekml8amZUzo.1Qretzi', 'role_id': 1, 'created_at': datetime.datetime(2025, 8, 19, 9, 46, 11, 724370), 'updated_at': datetime.datetime(2025, 8, 19, 9, 46, 11, 724370), 'last_login': None, 'failed_login_attempts': 0, 'account_locked': False, 'account_locked_until': None, 'password_changed_at': datetime.datetime(2025, 8, 19, 9, 46, 11, 721908), 'must_change_password': False, 'is_active': True}]
+(Background on this error at: https://sqlalche.me/e/14/9h9h) (Background on this error at: https://sqlalche.me/e/14/7s2a)
+2025-08-19 14:46:11,727 - HIPAA_AUDIT - ERROR - Action='USER_REGISTRATION', Resource='users', UserID='None', Success='False', Details='An error occurred: (psycopg2.errors.StringDataRightTruncation) value too long for type character varying(80)
+
+[SQL: INSERT INTO users (username, email, password_hash, role_id, created_at, updated_at, last_login, failed_login_attempts, account_locked, account_locked_until, password_changed_at, must_change_password, is_active) VALUES (%(username)s, %(email)s, %(password_hash)s, %(role_id)s, %(created_at)s, %(updated_at)s, %(last_login)s, %(failed_login_attempts)s, %(account_locked)s, %(account_locked_until)s, %(password_changed_at)s, %(must_change_password)s, %(is_active)s) RETURNING users.id]
+[parameters: {'username': 'gAAAAABopEfjgOFNnoPurVheZucMgOMf_Ex1IFj7lY3hy-i8z9SYbg7fDiWEZRLrS2rReqOQC-JukIx1TzsC2GTUjV8OEhcY_Q==', 'email': 'gAAAAABopEfjJTpSX3YZM-Z_YbJ2BMWxpJokZt9C53helrlMzT2hy9zwbSHufTXG2K01kAAjumRpcUXmP88DuF8Cp3Fx4ktEr25p-98lUXwgPM0vWMDDuSU=', 'password_hash': '$2b$12$Uq0HC188H14k3Nop1jl7zuNPYR3.qHrEU7ekml8amZUzo.1Qretzi', 'role_id': 1, 'created_at': datetime.datetime(2025, 8, 19, 9, 46, 11, 724370), 'updated_at': datetime.datetime(2025, 8, 19, 9, 46, 11, 724370), 'last_login': None, 'failed_login_attempts': 0, 'account_locked': False, 'account_locked_until': None, 'password_changed_at': datetime.datetime(2025, 8, 19, 9, 46, 11, 721908), 'must_change_password': False, 'is_active': True}]
+(Background on this error at: https://sqlalche.me/e/14/9h9h)'
+2025-08-19 14:46:11,766 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 14:46:11] "[35m[1mPOST /api/auth/register HTTP/1.1[0m" 500 -
+2025-08-19 14:46:32,853 - werkzeug - ERROR - 127.0.0.1 - - [19/Aug/2025 14:46:32] code 400, message Bad request version ('¿\x13¿')
+2025-08-19 14:46:32,853 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 14:46:32] "[31m[1m\x16\x03\x01\x00Â\x01\x00\x00·\x03\x03˙\x05\x03Ì?"eF\x84rœˇZ—'ﬁÃ–\x86\x01\x19aI\x88Â\x06\x1bb£\x0f\x15 \x8bhn\x8a≥\x97@ÙgØ¢\x99\x05ƒπ\x9d˙*\x87§>\x05•iÓT–\x83~ΩA=\x00$\x13\x01\x13\x02\x13\x03¿/¿+¿0¿,¿'Ã©Ã®¿\x09¿\x13¿[0m" 400 -
+2025-08-19 14:46:38,947 - app - ERROR - Decryption failed: Invalid token provided.
+2025-08-19 14:46:38,954 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='False', Details='Request successful. Status: 401'
+2025-08-19 14:46:38,955 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 14:46:38] "[31m[1mPOST /api/auth/login HTTP/1.1[0m" 401 -
+2025-08-19 14:46:40,663 - app - ERROR - Decryption failed: Invalid token provided.
+2025-08-19 14:46:40,670 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='False', Details='Request successful. Status: 401'
+2025-08-19 14:46:40,670 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 14:46:40] "[31m[1mPOST /api/auth/login HTTP/1.1[0m" 401 -
+2025-08-19 14:46:42,130 - app - ERROR - Decryption failed: Invalid token provided.
+2025-08-19 14:46:42,137 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='False', Details='Request successful. Status: 401'
+2025-08-19 14:46:42,137 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 14:46:42] "[31m[1mPOST /api/auth/login HTTP/1.1[0m" 401 -
+2025-08-19 14:47:10,639 - app - ERROR - Decryption failed: Invalid token provided.
+2025-08-19 14:47:10,647 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='False', Details='Request successful. Status: 401'
+2025-08-19 14:47:10,647 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 14:47:10] "[31m[1mPOST /api/auth/login HTTP/1.1[0m" 401 -
+2025-08-19 14:52:14,383 - app - ERROR - Decryption failed: Invalid token provided.
+2025-08-19 14:52:14,383 - app - ERROR - Decryption failed: Invalid token provided.
+2025-08-19 14:52:14,721 - HIPAA_AUDIT - ERROR - Failed to log audit entry due to DB error: This Session's transaction has been rolled back due to a previous exception during flush. To begin a new transaction with this Session, first issue Session.rollback(). Original exception was: (psycopg2.errors.StringDataRightTruncation) value too long for type character varying(80)
+
+[SQL: INSERT INTO users (username, email, password_hash, role_id, created_at, updated_at, last_login, failed_login_attempts, account_locked, account_locked_until, password_changed_at, must_change_password, is_active) VALUES (%(username)s, %(email)s, %(password_hash)s, %(role_id)s, %(created_at)s, %(updated_at)s, %(last_login)s, %(failed_login_attempts)s, %(account_locked)s, %(account_locked_until)s, %(password_changed_at)s, %(must_change_password)s, %(is_active)s) RETURNING users.id]
+[parameters: {'username': 'gAAAAABopElOblkY5uGsE9rZbGuPI0j4D8Qqc89ONpVjtkWLMgNll1qVDbDDX2FOoGeyinZxX-T2raUgQ4hQ_o8fwUK2n1zQ-Q==', 'email': 'gAAAAABopElOGStRddfa_ibyVA-g_3ju0-k12KzSt1vJScTX_Vqogf_JfRQglS5-30Nsg_iys8asi5WouvtFmRTY7oJgA3Eqz_8EbvhpC6edlFsDdEsKLOU=', 'password_hash': '$2b$12$1kXh0JRYE/72J4KcAoE.9O1ArCF3A4bg.oosIyXf07PEG6u9.P5ji', 'role_id': 1, 'created_at': datetime.datetime(2025, 8, 19, 9, 52, 14, 719192), 'updated_at': datetime.datetime(2025, 8, 19, 9, 52, 14, 719192), 'last_login': None, 'failed_login_attempts': 0, 'account_locked': False, 'account_locked_until': None, 'password_changed_at': datetime.datetime(2025, 8, 19, 9, 52, 14, 719192), 'must_change_password': False, 'is_active': True}]
+(Background on this error at: https://sqlalche.me/e/14/9h9h) (Background on this error at: https://sqlalche.me/e/14/7s2a)
+2025-08-19 14:52:14,721 - HIPAA_AUDIT - ERROR - Action='USER_REGISTRATION', Resource='users', UserID='None', Success='False', Details='An error occurred: (psycopg2.errors.StringDataRightTruncation) value too long for type character varying(80)
+
+[SQL: INSERT INTO users (username, email, password_hash, role_id, created_at, updated_at, last_login, failed_login_attempts, account_locked, account_locked_until, password_changed_at, must_change_password, is_active) VALUES (%(username)s, %(email)s, %(password_hash)s, %(role_id)s, %(created_at)s, %(updated_at)s, %(last_login)s, %(failed_login_attempts)s, %(account_locked)s, %(account_locked_until)s, %(password_changed_at)s, %(must_change_password)s, %(is_active)s) RETURNING users.id]
+[parameters: {'username': 'gAAAAABopElOblkY5uGsE9rZbGuPI0j4D8Qqc89ONpVjtkWLMgNll1qVDbDDX2FOoGeyinZxX-T2raUgQ4hQ_o8fwUK2n1zQ-Q==', 'email': 'gAAAAABopElOGStRddfa_ibyVA-g_3ju0-k12KzSt1vJScTX_Vqogf_JfRQglS5-30Nsg_iys8asi5WouvtFmRTY7oJgA3Eqz_8EbvhpC6edlFsDdEsKLOU=', 'password_hash': '$2b$12$1kXh0JRYE/72J4KcAoE.9O1ArCF3A4bg.oosIyXf07PEG6u9.P5ji', 'role_id': 1, 'created_at': datetime.datetime(2025, 8, 19, 9, 52, 14, 719192), 'updated_at': datetime.datetime(2025, 8, 19, 9, 52, 14, 719192), 'last_login': None, 'failed_login_attempts': 0, 'account_locked': False, 'account_locked_until': None, 'password_changed_at': datetime.datetime(2025, 8, 19, 9, 52, 14, 719192), 'must_change_password': False, 'is_active': True}]
+(Background on this error at: https://sqlalche.me/e/14/9h9h)'
+2025-08-19 14:52:14,752 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 14:52:14] "[35m[1mPOST /api/auth/register HTTP/1.1[0m" 500 -
+2025-08-19 14:52:41,415 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-19 14:52:41,415 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-19 14:52:41,420 - werkzeug - INFO -  * Restarting with stat
+2025-08-19 14:52:42,515 - werkzeug - WARNING -  * Debugger is active!
+2025-08-19 14:52:42,520 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-19 14:53:03,051 - app - ERROR - Decryption failed: Invalid token provided.
+2025-08-19 14:53:03,051 - app - ERROR - Decryption failed: Invalid token provided.
+2025-08-19 14:53:03,406 - HIPAA_AUDIT - ERROR - Failed to log audit entry due to DB error: This Session's transaction has been rolled back due to a previous exception during flush. To begin a new transaction with this Session, first issue Session.rollback(). Original exception was: (psycopg2.errors.StringDataRightTruncation) value too long for type character varying(80)
+
+[SQL: INSERT INTO users (username, email, password_hash, role_id, created_at, updated_at, last_login, failed_login_attempts, account_locked, account_locked_until, password_changed_at, must_change_password, is_active) VALUES (%(username)s, %(email)s, %(password_hash)s, %(role_id)s, %(created_at)s, %(updated_at)s, %(last_login)s, %(failed_login_attempts)s, %(account_locked)s, %(account_locked_until)s, %(password_changed_at)s, %(must_change_password)s, %(is_active)s) RETURNING users.id]
+[parameters: {'username': 'gAAAAABopEl-dQzJWx-qQXhxyufZPr_1x9vTy5pKtmak25fL6UX_2xSHZdVkUYOXjWejZp0_47HheYXZKnifOfezV7Ll1_rBVw==', 'email': 'gAAAAABopEl-YdA_HP73KdnSESRj9Td9rVOle2CUsolwkICXk6oVWkbK33reHhrpvRRz24wucaSjf6ydq5FgMKbISSjapDFPqjCC1ZTWR4MY4FUqPi3OuV8=', 'password_hash': '$2b$12$MLe1C2nt4mqL0hxghLcOa.VhPFGTHpx7NbpMW.AZ1w6Ctmg9ypNIa', 'role_id': 1, 'created_at': datetime.datetime(2025, 8, 19, 9, 53, 3, 401033), 'updated_at': datetime.datetime(2025, 8, 19, 9, 53, 3, 401033), 'last_login': None, 'failed_login_attempts': 0, 'account_locked': False, 'account_locked_until': None, 'password_changed_at': datetime.datetime(2025, 8, 19, 9, 53, 3, 401033), 'must_change_password': False, 'is_active': True}]
+(Background on this error at: https://sqlalche.me/e/14/9h9h) (Background on this error at: https://sqlalche.me/e/14/7s2a)
+2025-08-19 14:53:03,406 - HIPAA_AUDIT - ERROR - Action='USER_REGISTRATION', Resource='users', UserID='None', Success='False', Details='An error occurred: (psycopg2.errors.StringDataRightTruncation) value too long for type character varying(80)
+
+[SQL: INSERT INTO users (username, email, password_hash, role_id, created_at, updated_at, last_login, failed_login_attempts, account_locked, account_locked_until, password_changed_at, must_change_password, is_active) VALUES (%(username)s, %(email)s, %(password_hash)s, %(role_id)s, %(created_at)s, %(updated_at)s, %(last_login)s, %(failed_login_attempts)s, %(account_locked)s, %(account_locked_until)s, %(password_changed_at)s, %(must_change_password)s, %(is_active)s) RETURNING users.id]
+[parameters: {'username': 'gAAAAABopEl-dQzJWx-qQXhxyufZPr_1x9vTy5pKtmak25fL6UX_2xSHZdVkUYOXjWejZp0_47HheYXZKnifOfezV7Ll1_rBVw==', 'email': 'gAAAAABopEl-YdA_HP73KdnSESRj9Td9rVOle2CUsolwkICXk6oVWkbK33reHhrpvRRz24wucaSjf6ydq5FgMKbISSjapDFPqjCC1ZTWR4MY4FUqPi3OuV8=', 'password_hash': '$2b$12$MLe1C2nt4mqL0hxghLcOa.VhPFGTHpx7NbpMW.AZ1w6Ctmg9ypNIa', 'role_id': 1, 'created_at': datetime.datetime(2025, 8, 19, 9, 53, 3, 401033), 'updated_at': datetime.datetime(2025, 8, 19, 9, 53, 3, 401033), 'last_login': None, 'failed_login_attempts': 0, 'account_locked': False, 'account_locked_until': None, 'password_changed_at': datetime.datetime(2025, 8, 19, 9, 53, 3, 401033), 'must_change_password': False, 'is_active': True}]
+(Background on this error at: https://sqlalche.me/e/14/9h9h)'
+2025-08-19 14:53:03,455 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 14:53:03] "[35m[1mPOST /api/auth/register HTTP/1.1[0m" 500 -
+2025-08-19 14:55:07,673 - werkzeug - INFO -  * Detected change in 'E:\\woltrio\\DejiEMRAPI\\app\\models\\user_models.py', reloading
+2025-08-19 14:55:07,821 - werkzeug - INFO -  * Restarting with stat
+2025-08-19 14:56:02,725 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-19 14:56:02,725 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-19 14:56:02,731 - werkzeug - INFO -  * Restarting with stat
+2025-08-19 14:56:03,950 - werkzeug - WARNING -  * Debugger is active!
+2025-08-19 14:56:03,955 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-19 14:56:08,901 - app - ERROR - Decryption failed: Invalid token provided.
+2025-08-19 14:56:08,901 - app - ERROR - Decryption failed: Invalid token provided.
+2025-08-19 14:56:09,251 - HIPAA_AUDIT - INFO - Action='USER_REGISTRATION', Resource='users', UserID='2', Success='True', Details='Request successful. Status: 201'
+2025-08-19 14:56:09,251 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 14:56:09] "[35m[1mPOST /api/auth/register HTTP/1.1[0m" 201 -
+2025-08-19 14:56:14,739 - app - ERROR - Decryption failed: Invalid token provided.
+2025-08-19 14:56:15,076 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-19 14:56:15,076 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 14:56:15] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-19 14:57:02,205 - werkzeug - ERROR - 127.0.0.1 - - [19/Aug/2025 14:57:02] code 400, message Bad request version ('¿\x13¿')
+2025-08-19 14:57:02,205 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 14:57:02] "[31m[1m\x16\x03\x01\x00Â\x01\x00\x00·\x03\x03Ò–… ı€˘\x9f°3˝*>„« 1\x92\x1b\\÷|‘\x96‡\x00≤\x94\x15Ò%∏ \x88[ıÀ\x09 \x98\x91\x04\x04Á\x87\x0f"©F\x8b\x0bÊ««\x97:3\x9e∞\x93\x02\x9c\x13\\\x0e\x00$\x13\x01\x13\x02\x13\x03¿/¿+¿0¿,¿'Ã©Ã®¿\x09¿\x13¿[0m" 400 -
+2025-08-19 14:57:10,762 - HIPAA_AUDIT - INFO - Action='VIEW_PATIENTS', Resource='patients', UserID='2', Success='True', Details='Request successful. Status: 200'
+2025-08-19 14:57:10,763 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 14:57:10] "GET /api/patients HTTP/1.1" 200 -
+2025-08-19 15:18:41,956 - app - ERROR - Decryption failed: Invalid token provided.
+2025-08-19 15:18:42,302 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-19 15:18:42,302 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:18:42] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-19 15:21:48,331 - HIPAA_AUDIT - INFO - Action='USER_REGISTRATION', Resource='users', UserID='3', Success='True', Details='Request successful. Status: 201'
+2025-08-19 15:21:48,331 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:21:48] "[35m[1mPOST /api/auth/register HTTP/1.1[0m" 201 -
+2025-08-19 15:22:15,381 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-19 15:22:15,381 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 15:22:15] "POST /api/auth/login HTTP/1.1" 200 -

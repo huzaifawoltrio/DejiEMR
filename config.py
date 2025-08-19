@@ -9,6 +9,10 @@ class Config:
     # Security
     SECRET_KEY = os.environ.get('SECRET_KEY') or secrets.token_hex(32)
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY') or secrets.token_hex(32)
+    
+    # Add the encryption key here
+    EMR_ENCRYPTION_KEY = os.environ.get('EMR_ENCRYPTION_KEY')
+
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=15)
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=1)
     JWT_BLACKLIST_ENABLED = True
