@@ -13,7 +13,6 @@ class User(db.Model):
     __tablename__ = 'users'
     
     id = db.Column(db.Integer, primary_key=True)
-    # Increase the length to accommodate encrypted strings
     username = db.Column(db.String(255), unique=True, nullable=False, index=True)
     email = db.Column(db.String(255), unique=True, nullable=False, index=True)
     password_hash = db.Column(db.String(255), nullable=False)
@@ -32,6 +31,9 @@ class User(db.Model):
     role = db.relationship('Role', backref='users')
     audit_logs = db.relationship('AuditLog', backref='user', lazy='dynamic')
     
+    # Add this line to create the one-to-one relationship
+    doctor_profile = db.relationship('DoctorProfile', backref='user', uselist=False, cascade="all, delete-orphan")
+
     def set_password(self, password: str) -> None:
         if not self._validate_password_strength(password):
             raise ValueError("Password does not meet HIPAA requirements")
@@ -67,6 +69,33 @@ class User(db.Model):
                 any(c.islower() for c in password) and
                 any(c.isdigit() for c in password) and
                 any(c in '!@#$%^&*()_+-=[]{}|;:,.<>?' for c in password))
+
+# Add this entire class to your models file
+class DoctorProfile(db.Model):
+    """Model for storing doctor-specific profile information."""
+    __tablename__ = 'doctor_profiles'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, unique=True)
+    
+    first_name = db.Column(db.String(255), nullable=False)
+    last_name = db.Column(db.String(255), nullable=False)
+    medical_license_number = db.Column(db.String(255), nullable=False, unique=True)
+    qualifications = db.Column(db.Text, nullable=False)
+    npi_number = db.Column(db.String(255), unique=True)
+    dea_number = db.Column(db.String(255), unique=True)
+    profile_picture_url = db.Column(db.String(512))
+    biography = db.Column(db.Text)
+    languages_spoken = db.Column(db.String(255))
+
+    department = db.Column(db.String(100))
+    specialization = db.Column(db.String(100))
+    years_of_experience = db.Column(db.Integer)
+    available_for_telehealth = db.Column(db.Boolean, default=False)
+    
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
 
 class Role(db.Model):
     __tablename__ = 'roles'

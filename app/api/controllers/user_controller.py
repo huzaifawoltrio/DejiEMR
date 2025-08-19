@@ -2,13 +2,13 @@
 from flask import jsonify
 from flask_jwt_extended import get_jwt_identity, get_jwt
 from app.models.user_models import User
-from app.utils.encryption_util import encryptor # <-- Import the encryptor
+from app.utils.encryption_util import encryptor
 
 def get_all_users_list():
     """Returns a list of all users for admin, with decrypted data."""
     users = User.query.all()
     
-    # Decrypt the data before sending it in the response
+    # Decrypt the sensitive data before sending it in the response
     decrypted_users = []
     for u in users:
         decrypted_users.append({

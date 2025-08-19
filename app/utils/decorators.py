@@ -1,3 +1,4 @@
+# /app/utils/decorators.py
 from functools import wraps
 from flask import request, current_app, jsonify, make_response
 from app.models.system_models import AuditLog
@@ -23,8 +24,8 @@ def audit_log(action, resource):
                 # No JWT token present (e.g., for registration or login)
                 pass
 
-            # Capture resource_id from request body for specific actions
-            if action == "USER_REGISTRATION" and request.is_json:
+            # Capture resource_id from request body for registration actions
+            if action in ["USER_REGISTRATION", "DOCTOR_REGISTRATION"] and request.is_json:
                 data = request.get_json(silent=True)
                 if data:
                     # In a registration attempt, we can only identify the resource by email
@@ -32,7 +33,6 @@ def audit_log(action, resource):
             
             try:
                 # Execute the decorated view function.
-                # Use make_response to handle both Response objects and tuples.
                 raw_response = f(*args, **kwargs)
                 response = make_response(raw_response)
                 
@@ -40,7 +40,7 @@ def audit_log(action, resource):
                 details = f"Request successful. Status: {response.status_code}"
                 
                 # For a successful registration, get the new user_id from the response
-                if action == "USER_REGISTRATION" and success and response.is_json:
+                if action in ["USER_REGISTRATION", "DOCTOR_REGISTRATION"] and success and response.is_json:
                     response_data = response.get_json()
                     user_id = response_data.get('user_id')
                     
@@ -63,6 +63,7 @@ def audit_log(action, resource):
                 return response
 
             except Exception as e:
+                db.session.rollback() # Rollback any potential changes from the failed request
                 details = f"An error occurred: {str(e)}"
                 log_entry = AuditLog(
                     user_id=user_id,
@@ -85,12 +86,14 @@ def audit_log(action, resource):
                     f"Action='{action}', Resource='{resource}', UserID='{user_id}', Success='False', Details='{details}'"
                 )
                 
+                # Re-raise the original exception to be handled by Flask's error handlers
                 raise
 
         return decorated_function
     return decorator
 
 def require_permission(resource, action):
+    """Checks if the authenticated user has permission to perform an action on a resource."""
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
@@ -101,7 +104,7 @@ def require_permission(resource, action):
             if not user or not user.is_active:
                 return jsonify({'error': 'User not found or inactive'}), 403
 
-            # 🔑 Always allow superadmin
+            # Always allow superadmin to bypass permission checks
             if user.role.name == "superadmin":
                 return f(*args, **kwargs)
 
@@ -114,28 +117,5 @@ def require_permission(resource, action):
                 return jsonify({'error': 'Permission denied'}), 403
 
             return f(*args, **kwargs)
-        return decorated_function
-    return decorator
-    """Checks if the authenticated user has permission to perform an action on a resource."""
-    def decorator(f):
-        @wraps(f)
-        def decorated_function(*args, **kwargs):
-            verify_jwt_in_request()
-            user_id = get_jwt_identity()
-            user = User.query.get(user_id)
-
-            if not user or not user.is_active:
-                return jsonify({'error': 'User not found or inactive'}), 403
-
-            has_permission = any(
-                p.resource == resource and p.action == action 
-                for p in user.role.permissions
-            )
-
-            if not has_permission:
-                return jsonify({'error': 'Permission denied'}), 403
-            
-            return f(*args, **kwargs)
-
         return decorated_function
     return decorator

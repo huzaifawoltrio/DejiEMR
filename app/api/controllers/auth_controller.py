@@ -8,7 +8,7 @@ from flask_jwt_extended import (
 from app.extensions import db
 from app.models.user_models import User, Role
 from app.models.system_models import RevokedToken
-from app.utils.encryption_util import encryptor # <-- Import the encryptor
+from app.utils.encryption_util import encryptor
 
 def register_user():
     """Handles the logic for user registration with encryption."""
@@ -23,11 +23,8 @@ def register_user():
     encrypted_email = encryptor.encrypt(data['email'])
     encrypted_username = encryptor.encrypt(data['username'])
 
-    # Check if the encrypted username or email already exists.
-    # Note: This approach requires decrypting in the database or fetching all and decrypting in app,
-    # which is inefficient. A better approach for uniqueness is to store a hash of the value.
-    # For this example, we will proceed, but be aware of performance implications.
-    # A more scalable solution might involve a separate, indexed hash column for lookups.
+    # Check if the username or email already exists by decrypting stored values.
+    # Note: This is inefficient for large datasets. A hashed column for lookups is a better practice.
     users = User.query.all()
     for user in users:
         if encryptor.decrypt(user.username) == data['username'] or encryptor.decrypt(user.email) == data['email']:
@@ -58,10 +55,8 @@ def login_user():
     if not data or not data.get('username') or not data.get('password'):
         return jsonify({'error': 'Username and password required'}), 400
     
-    # Since username is encrypted, we must iterate to find the user
-    # This is INEFFICIENT and NOT suitable for production with many users.
-    # A better solution is to not encrypt the login identifier (username) or use a hashed version for lookup.
-    # We proceed this way to demonstrate the decrypt functionality.
+    # Since username is encrypted, we must iterate to find the user.
+    # This is INEFFICIENT and not suitable for production with many users.
     users = User.query.all()
     user = None
     for u in users:
@@ -80,7 +75,7 @@ def login_user():
         db.session.commit()
         return jsonify({'error': 'Password expired. Please change your password.'}), 403
     
-    # Decrypt username for the JWT payload
+    # Decrypt username for the JWT payload and response
     decrypted_username = encryptor.decrypt(user.username)
         
     access_token = create_access_token(identity=str(user.id), additional_claims={'role': user.role.name, 'username': decrypted_username})
