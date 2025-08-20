@@ -1414,3 +1414,82 @@ LINE 1: ...ip_address, user_agent, success, details) VALUES ('rootadmin...
 2025-08-19 17:46:34,470 - app - INFO - Successfully sent password email to zayfadeveloper@gmail.com
 2025-08-19 17:46:34,478 - HIPAA_AUDIT - INFO - Action='DOCTOR_REGISTRATION', Resource='doctors', UserID='None', Success='True', Details='Request successful. Status: 201'
 2025-08-19 17:46:34,479 - werkzeug - INFO - 127.0.0.1 - - [19/Aug/2025 17:46:34] "[35m[1mPOST /api/doctors/register HTTP/1.1[0m" 201 -
+2025-08-20 10:34:13,301 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-20 10:34:13,302 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-20 10:34:13,304 - werkzeug - INFO -  * Restarting with stat
+2025-08-20 10:34:15,050 - werkzeug - WARNING -  * Debugger is active!
+2025-08-20 10:34:15,070 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-20 10:35:06,493 - werkzeug - INFO -  * Detected change in 'E:\\woltrio\\DejiEMRAPI\\app\\commands.py', reloading
+2025-08-20 10:35:06,643 - werkzeug - INFO -  * Restarting with stat
+2025-08-20 10:35:08,373 - werkzeug - WARNING -  * Debugger is active!
+2025-08-20 10:35:08,383 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-20 10:35:19,229 - werkzeug - INFO -  * Detected change in 'E:\\woltrio\\DejiEMRAPI\\app\\api\\routes.py', reloading
+2025-08-20 10:35:19,413 - werkzeug - INFO -  * Restarting with stat
+2025-08-20 10:35:21,023 - werkzeug - WARNING -  * Debugger is active!
+2025-08-20 10:35:21,033 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-20 10:35:34,069 - werkzeug - INFO -  * Detected change in 'E:\\woltrio\\DejiEMRAPI\\app\\api\\controllers\\auth_controller.py', reloading
+2025-08-20 10:35:34,260 - werkzeug - INFO -  * Restarting with stat
+2025-08-20 10:35:35,853 - werkzeug - WARNING -  * Debugger is active!
+2025-08-20 10:35:35,863 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-20 10:36:08,463 - werkzeug - INFO -  * Detected change in 'E:\\woltrio\\DejiEMRAPI\\app\\api\\controllers\\doctor_controller.py', reloading
+2025-08-20 10:36:08,693 - werkzeug - INFO -  * Restarting with stat
+2025-08-20 10:36:10,583 - werkzeug - WARNING -  * Debugger is active!
+2025-08-20 10:36:10,593 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-20 10:36:59,232 - HIPAA_AUDIT - ERROR - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='False', Details='An error occurred: (psycopg2.errors.UndefinedColumn) column users.username_hash does not exist
+LINE 1: ...me AS users_username, users.email AS users_email, users.user...
+                                                             ^
+
+[SQL: SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.username_hash AS users_username_hash, users.email_hash AS users_email_hash, users.password_hash AS users_password_hash, users.role_id AS users_role_id, users.created_at AS users_created_at, users.updated_at AS users_updated_at, users.last_login AS users_last_login, users.failed_login_attempts AS users_failed_login_attempts, users.account_locked AS users_account_locked, users.account_locked_until AS users_account_locked_until, users.password_changed_at AS users_password_changed_at, users.must_change_password AS users_must_change_password, users.is_active AS users_is_active 
+FROM users 
+WHERE users.username_hash = %(username_hash_1)s 
+ LIMIT %(param_1)s]
+[parameters: {'username_hash_1': '799824ba3560d3955f302c392de50e2232991ffaeca6f24200cf46571b523489', 'param_1': 1}]
+(Background on this error at: https://sqlalche.me/e/14/f405)'
+2025-08-20 10:36:59,278 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 10:36:59] "[35m[1mPOST /api/auth/login HTTP/1.1[0m" 500 -
+2025-08-20 10:37:07,586 - HIPAA_AUDIT - ERROR - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='False', Details='An error occurred: (psycopg2.errors.UndefinedColumn) column users.username_hash does not exist
+LINE 1: ...me AS users_username, users.email AS users_email, users.user...
+                                                             ^
+
+[SQL: SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.username_hash AS users_username_hash, users.email_hash AS users_email_hash, users.password_hash AS users_password_hash, users.role_id AS users_role_id, users.created_at AS users_created_at, users.updated_at AS users_updated_at, users.last_login AS users_last_login, users.failed_login_attempts AS users_failed_login_attempts, users.account_locked AS users_account_locked, users.account_locked_until AS users_account_locked_until, users.password_changed_at AS users_password_changed_at, users.must_change_password AS users_must_change_password, users.is_active AS users_is_active 
+FROM users 
+WHERE users.username_hash = %(username_hash_1)s 
+ LIMIT %(param_1)s]
+[parameters: {'username_hash_1': '799824ba3560d3955f302c392de50e2232991ffaeca6f24200cf46571b523489', 'param_1': 1}]
+(Background on this error at: https://sqlalche.me/e/14/f405)'
+2025-08-20 10:37:07,623 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 10:37:07] "[35m[1mPOST /api/auth/login HTTP/1.1[0m" 500 -
+2025-08-20 10:37:31,351 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-20 10:37:31,351 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-20 10:37:31,355 - werkzeug - INFO -  * Restarting with stat
+2025-08-20 10:37:33,004 - werkzeug - WARNING -  * Debugger is active!
+2025-08-20 10:37:33,013 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-20 10:37:34,869 - HIPAA_AUDIT - ERROR - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='False', Details='An error occurred: (psycopg2.errors.UndefinedColumn) column users.username_hash does not exist
+LINE 1: ...me AS users_username, users.email AS users_email, users.user...
+                                                             ^
+
+[SQL: SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.username_hash AS users_username_hash, users.email_hash AS users_email_hash, users.password_hash AS users_password_hash, users.role_id AS users_role_id, users.created_at AS users_created_at, users.updated_at AS users_updated_at, users.last_login AS users_last_login, users.failed_login_attempts AS users_failed_login_attempts, users.account_locked AS users_account_locked, users.account_locked_until AS users_account_locked_until, users.password_changed_at AS users_password_changed_at, users.must_change_password AS users_must_change_password, users.is_active AS users_is_active 
+FROM users 
+WHERE users.username_hash = %(username_hash_1)s 
+ LIMIT %(param_1)s]
+[parameters: {'username_hash_1': '799824ba3560d3955f302c392de50e2232991ffaeca6f24200cf46571b523489', 'param_1': 1}]
+(Background on this error at: https://sqlalche.me/e/14/f405)'
+2025-08-20 10:37:34,911 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 10:37:34] "[35m[1mPOST /api/auth/login HTTP/1.1[0m" 500 -
+2025-08-20 10:44:16,704 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-20 10:44:16,705 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-20 10:44:16,709 - werkzeug - INFO -  * Restarting with stat
+2025-08-20 10:44:18,222 - werkzeug - WARNING -  * Debugger is active!
+2025-08-20 10:44:18,230 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-20 10:44:26,324 - HIPAA_AUDIT - INFO - Action='USER_REGISTRATION', Resource='users', UserID='1', Success='True', Details='Request successful. Status: 201'
+2025-08-20 10:44:26,325 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 10:44:26] "[35m[1mPOST /api/auth/register HTTP/1.1[0m" 201 -
+2025-08-20 10:44:31,496 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-20 10:44:31,497 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 10:44:31] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-20 10:44:49,836 - HIPAA_AUDIT - INFO - Action='VIEW_PATIENTS', Resource='patients', UserID='1', Success='True', Details='Request successful. Status: 200'
+2025-08-20 10:44:49,837 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 10:44:49] "GET /api/patients HTTP/1.1" 200 -
+2025-08-20 10:44:57,554 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 10:44:57] "[31m[1mPOST /api/doctors/register HTTP/1.1[0m" 401 -
+2025-08-20 10:45:21,200 - app - INFO - Successfully sent password email to zayfadeveloper@gmail.com
+2025-08-20 10:45:21,206 - HIPAA_AUDIT - INFO - Action='DOCTOR_REGISTRATION', Resource='doctors', UserID='2', Success='True', Details='Request successful. Status: 201'
+2025-08-20 10:45:21,207 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 10:45:21] "[35m[1mPOST /api/doctors/register HTTP/1.1[0m" 201 -
+2025-08-20 10:46:11,427 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-20 10:46:11,428 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 10:46:11] "POST /api/auth/login HTTP/1.1" 200 -

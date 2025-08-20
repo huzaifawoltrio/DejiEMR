@@ -1,4 +1,4 @@
-# /app/models/user_models.py
+import hashlib
 from datetime import datetime, timedelta
 from app.extensions import db, bcrypt
 
@@ -9,12 +9,18 @@ role_permissions = db.Table('role_permissions',
 )
 
 class User(db.Model):
-    """User model with HIPAA-compliant fields"""
+    """User model with HIPAA-compliant fields and hashed lookups."""
     __tablename__ = 'users'
     
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(255), unique=True, nullable=False, index=True)
-    email = db.Column(db.String(255), unique=True, nullable=False, index=True)
+    # Encrypted PII fields for storage
+    username = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(255), nullable=False)
+    
+    # Hashed, indexed columns for fast, secure lookups
+    username_hash = db.Column(db.String(64), unique=True, nullable=False, index=True)
+    email_hash = db.Column(db.String(64), unique=True, nullable=False, index=True)
+
     password_hash = db.Column(db.String(255), nullable=False)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), nullable=False)
     
@@ -30,17 +36,25 @@ class User(db.Model):
     
     role = db.relationship('Role', backref='users')
     audit_logs = db.relationship('AuditLog', backref='user', lazy='dynamic')
-    
-    # Add this line to create the one-to-one relationship
     doctor_profile = db.relationship('DoctorProfile', backref='user', uselist=False, cascade="all, delete-orphan")
+
+    @staticmethod
+    def create_hash(value: str) -> str:
+        """Creates a SHA-256 hash for a given string."""
+        if not value:
+            return ""
+        return hashlib.sha256(value.lower().encode('utf-8')).hexdigest()
 
     def set_password(self, password: str) -> None:
         if not self._validate_password_strength(password):
-            raise ValueError("Password does not meet HIPAA requirements")
+            raise ValueError("Password does not meet complexity requirements")
         self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
         self.password_changed_at = datetime.utcnow()
     
     def check_password(self, password: str) -> bool:
+        # NOTE: This method contains business logic (locking, attempt counting) and a db.commit().
+        # In a larger application, this logic should be moved to a dedicated service layer
+        # to improve separation of concerns and transactional control.
         if self.account_locked and self.account_locked_until and datetime.utcnow() < self.account_locked_until:
             return False
         elif self.account_locked:
@@ -70,14 +84,10 @@ class User(db.Model):
                 any(c.isdigit() for c in password) and
                 any(c in '!@#$%^&*()_+-=[]{}|;:,.<>?' for c in password))
 
-# Add this entire class to your models file
 class DoctorProfile(db.Model):
-    """Model for storing doctor-specific profile information."""
     __tablename__ = 'doctor_profiles'
-
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, unique=True)
-    
     first_name = db.Column(db.String(255), nullable=False)
     last_name = db.Column(db.String(255), nullable=False)
     medical_license_number = db.Column(db.String(255), nullable=False, unique=True)
@@ -87,15 +97,12 @@ class DoctorProfile(db.Model):
     profile_picture_url = db.Column(db.String(512))
     biography = db.Column(db.Text)
     languages_spoken = db.Column(db.String(255))
-
     department = db.Column(db.String(100))
     specialization = db.Column(db.String(100))
     years_of_experience = db.Column(db.Integer)
     available_for_telehealth = db.Column(db.Boolean, default=False)
-    
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-
 
 class Role(db.Model):
     __tablename__ = 'roles'

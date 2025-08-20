@@ -1,14 +1,10 @@
-# /app/api/routes.py
 from flask_jwt_extended import jwt_required
 from . import api_bp
 from app.extensions import limiter
 from app.utils.decorators import audit_log, require_permission
-
-# Import all controller functions
 from .controllers import auth_controller, user_controller, patient_controller, doctor_controller
 
 # --- Authentication Endpoints ---
-
 @api_bp.route('/auth/register', methods=['POST'])
 @limiter.limit("5 per hour")
 @audit_log("USER_REGISTRATION", "users")
@@ -39,37 +35,37 @@ def change_password():
     return auth_controller.change_user_password()
 
 # --- Doctor Endpoints ---
-
 @api_bp.route('/doctors/register', methods=['POST'])
+@jwt_required()
 @limiter.limit("10 per hour")
 @audit_log("DOCTOR_REGISTRATION", "doctors")
-# @require_permission('doctors', 'write') # Optional: Uncomment when permissions are set up
+@require_permission('doctors', 'write')
 def register_doctor():
     return doctor_controller.register_doctor()
 
 @api_bp.route('/doctors', methods=['GET'])
 @jwt_required()
 @audit_log("VIEW_ALL_DOCTORS", "doctors")
-# @require_permission('doctors', 'read') # Optional: Uncomment when permissions are set up
+@require_permission('doctors', 'read')
 def get_doctors():
     return doctor_controller.get_all_doctors()
 
-# --- Protected Example Endpoints ---
-
+# --- Patient Endpoints ---
 @api_bp.route('/patients', methods=['GET'])
-@jwt_required() # Ensuring user is logged in
+@jwt_required()
 @require_permission('patients', 'read')
 @audit_log("VIEW_PATIENTS", "patients")
 def get_patients():
     return patient_controller.get_all_patients()
 
+# --- Admin & Test Endpoints ---
 @api_bp.route('/test-auth', methods=['GET'])
 @jwt_required()
 def test_auth():
     return user_controller.test_user_auth()
 
 @api_bp.route('/admin/users', methods=['GET'])
-@jwt_required() # Ensuring user is logged in
+@jwt_required()
 @require_permission('users', 'admin')
 @audit_log("VIEW_ALL_USERS", "users")
 def get_all_users():

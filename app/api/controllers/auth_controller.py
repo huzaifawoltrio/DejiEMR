@@ -1,4 +1,3 @@
-# /app/api/controllers/auth_controller.py
 from datetime import datetime
 from flask import request, jsonify
 from flask_jwt_extended import (
@@ -11,33 +10,31 @@ from app.models.system_models import RevokedToken
 from app.utils.encryption_util import encryptor
 
 def register_user():
-    """Handles the logic for user registration with encryption."""
+    """Handles user registration with encrypted PII and hashed lookups."""
     data = request.get_json()
     
     required_fields = ['username', 'email', 'password', 'role']
-    missing_fields = [field for field in required_fields if field not in data]
-    if missing_fields:
-        return jsonify({'error': f"Missing required fields: {', '.join(missing_fields)}"}), 400
+    if any(field not in data for field in required_fields):
+        return jsonify({'error': 'Missing required fields'}), 400
 
-    # Encrypt sensitive PII (Personally Identifiable Information)
-    encrypted_email = encryptor.encrypt(data['email'])
-    encrypted_username = encryptor.encrypt(data['username'])
-
-    # Check if the username or email already exists by decrypting stored values.
-    # Note: This is inefficient for large datasets. A hashed column for lookups is a better practice.
-    users = User.query.all()
-    for user in users:
-        if encryptor.decrypt(user.username) == data['username'] or encryptor.decrypt(user.email) == data['email']:
-            return jsonify({'error': 'Username or email already exists'}), 409
+    username = data['username']
+    email = data['email']
+    
+    # Check for uniqueness using fast, indexed hashed columns
+    if User.query.filter_by(username_hash=User.create_hash(username)).first():
+        return jsonify({'error': 'Username already exists'}), 409
+    if User.query.filter_by(email_hash=User.create_hash(email)).first():
+        return jsonify({'error': 'Email already exists'}), 409
     
     role = Role.query.filter_by(name=data.get('role', 'patient')).first()
     if not role:
         return jsonify({'error': 'Invalid role'}), 400
     
-    # Create user with encrypted data
     user = User(
-        username=encrypted_username, 
-        email=encrypted_email, 
+        username=encryptor.encrypt(username), 
+        email=encryptor.encrypt(email),
+        username_hash=User.create_hash(username),
+        email_hash=User.create_hash(email),
         role_id=role.id
     )
     try:
@@ -50,21 +47,18 @@ def register_user():
     return jsonify({'message': 'User created successfully', 'user_id': user.id}), 201
 
 def login_user():
-    """Handles the logic for user login with decryption."""
+    """Handles user login using fast, hashed lookups."""
     data = request.get_json()
     if not data or not data.get('username') or not data.get('password'):
         return jsonify({'error': 'Username and password required'}), 400
     
-    # Since username is encrypted, we must iterate to find the user.
-    # This is INEFFICIENT and not suitable for production with many users.
-    users = User.query.all()
-    user = None
-    for u in users:
-        if encryptor.decrypt(u.username) == data['username']:
-            user = u
-            break
-            
-    if not user or not user.check_password(data['password']):
+    username = data['username']
+    password = data['password']
+
+    # Find the user via the indexed username_hash column
+    user = User.query.filter_by(username_hash=User.create_hash(username)).first()
+        
+    if not user or not user.check_password(password):
         return jsonify({'error': 'Invalid credentials'}), 401
     if user.account_locked:
         return jsonify({'error': 'Account locked due to multiple failed attempts'}), 423
@@ -75,40 +69,42 @@ def login_user():
         db.session.commit()
         return jsonify({'error': 'Password expired. Please change your password.'}), 403
     
-    # Decrypt username for the JWT payload and response
-    decrypted_username = encryptor.decrypt(user.username)
-        
-    access_token = create_access_token(identity=str(user.id), additional_claims={'role': user.role.name, 'username': decrypted_username})
+    # Create tokens with user ID as identity and role in claims
+    # NOTE: We do NOT put PII like username in the token payload.
+    access_token = create_access_token(
+        identity=str(user.id), additional_claims={'role': user.role.name}
+    )
     refresh_token = create_refresh_token(identity=str(user.id))
     
     return jsonify({
-        'access_token': access_token, 'refresh_token': refresh_token,
-        'user': {'id': user.id, 'username': decrypted_username, 'role': user.role.name}
+        'access_token': access_token, 
+        'refresh_token': refresh_token,
+        'user': {
+            'id': user.id, 
+            'username': encryptor.decrypt(user.username), # Decrypt for response only
+            'role': user.role.name
+        }
     }), 200
 
 def logout_user():
-    """Handles the logic for user logout by revoking the token."""
     jti = get_jwt()['jti']
-    exp = get_jwt()['exp']
-    revoked_token = RevokedToken(jti=jti, expires_at=datetime.fromtimestamp(exp))
+    revoked_token = RevokedToken(jti=jti)
     db.session.add(revoked_token)
     db.session.commit()
     return jsonify({'message': 'Successfully logged out'}), 200
 
 def refresh_token():
-    """Handles the logic for refreshing an access token."""
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
     if not user or not user.is_active:
         return jsonify({'error': 'User not found or inactive'}), 403
     
-    decrypted_username = encryptor.decrypt(user.username)
-    
-    access_token = create_access_token(identity=user_id, additional_claims={'role': user.role.name, 'username': decrypted_username})
+    access_token = create_access_token(
+        identity=user_id, additional_claims={'role': user.role.name}
+    )
     return jsonify({'access_token': access_token}), 200
 
 def change_user_password():
-    """Handles the logic for changing a user's password."""
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
     data = request.get_json()
