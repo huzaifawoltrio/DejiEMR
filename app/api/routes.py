@@ -51,15 +51,14 @@ def register_doctor():
 def get_doctors():
     return doctor_controller.get_all_doctors()
 
+# --- UPDATED: Patient Management Endpoints ---
 
-# --- NEW: Patient CRUD Endpoints ---
-
-@api_bp.route('/patients', methods=['POST'])
+@api_bp.route('/patients/register', methods=['POST'])
 @jwt_required()
 @require_permission('patients', 'write')
-@audit_log("CREATE_PATIENT", "patients")
-def create_patient_route():
-    return patient_controller.create_patient()
+@audit_log("PATIENT_REGISTRATION", "patients")
+def register_patient_route():
+    return patient_controller.register_patient()
 
 @api_bp.route('/patients', methods=['GET'])
 @jwt_required()
@@ -85,10 +84,9 @@ def update_patient_route(patient_id):
 @api_bp.route('/patients/<int:patient_id>', methods=['DELETE'])
 @jwt_required()
 @require_permission('patients', 'write')
-@audit_log("DELETE_PATIENT", "patients")
-def delete_patient_route(patient_id):
-    return patient_controller.delete_patient(patient_id)
-
+@audit_log("DISASSOCIATE_PATIENT", "patients")
+def disassociate_patient_route(patient_id):
+    return patient_controller.disassociate_patient(patient_id)
 
 # --- Admin & Test Endpoints ---
 @api_bp.route('/test-auth', methods=['GET'])

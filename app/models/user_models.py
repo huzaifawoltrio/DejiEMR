@@ -1,13 +1,19 @@
 import hashlib
 from datetime import datetime, timedelta
 from app.extensions import db, bcrypt
-from app.models.patient_models import Patient 
+# The import below will be circular if not handled carefully, but Flask-SQLAlchemy manages it.
+# from app.models.patient_profile_models import PatientProfile 
 
 # --- Association table for many-to-many relationship ---
-# MOVED: This must be defined before the Role and Permission models that use it.
 role_permissions = db.Table('role_permissions',
     db.Column('role_id', db.Integer, db.ForeignKey('roles.id'), primary_key=True),
     db.Column('permission_id', db.Integer, db.ForeignKey('permissions.id'), primary_key=True)
+)
+
+# NEW: Association table to link doctors and patients
+doctor_patient_association = db.Table('doctor_patient_association',
+    db.Column('doctor_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
+    db.Column('patient_id', db.Integer, db.ForeignKey('users.id'), primary_key=True)
 )
 
 class User(db.Model):
@@ -35,7 +41,19 @@ class User(db.Model):
     role = db.relationship('Role', backref='users')
     audit_logs = db.relationship('AuditLog', backref='user', lazy='dynamic')
     doctor_profile = db.relationship('DoctorProfile', backref='user', uselist=False, cascade="all, delete-orphan")
-    patients = db.relationship('Patient', back_populates='doctor', lazy='dynamic', cascade="all, delete-orphan")
+    
+    # CORRECTED: Use back_populates to link to the 'user' property on PatientProfile
+    patient_profile = db.relationship('PatientProfile', back_populates='user', uselist=False, cascade="all, delete-orphan")
+
+    # NEW: Many-to-many relationship for doctors to manage their assigned patients
+    assigned_patients = db.relationship(
+        'User', 
+        secondary=doctor_patient_association,
+        primaryjoin=(doctor_patient_association.c.doctor_id == id),
+        secondaryjoin=(doctor_patient_association.c.patient_id == id),
+        backref=db.backref('assigned_doctors', lazy='dynamic'),
+        lazy='dynamic'
+    )
 
     @staticmethod
     def create_hash(value: str) -> str:
