@@ -2,9 +2,9 @@ from flask_jwt_extended import jwt_required
 from . import api_bp
 from app.extensions import limiter
 from app.utils.decorators import audit_log, require_permission
-from .controllers import auth_controller, user_controller, patient_controller, doctor_controller
+from .controllers import auth_controller, user_controller, patient_controller, doctor_controller, appointment_controller
 
-# ... (Authentication and Doctor endpoints remain the same) ...
+
 # --- Authentication Endpoints ---
 @api_bp.route('/auth/register', methods=['POST'])
 @limiter.limit("5 per hour")
@@ -51,8 +51,7 @@ def register_doctor():
 def get_doctors():
     return doctor_controller.get_all_doctors()
 
-# --- UPDATED: Patient Management Endpoints ---
-
+# --- Patient Management Endpoints ---
 @api_bp.route('/patients/register', methods=['POST'])
 @jwt_required()
 @require_permission('patients', 'write')
@@ -88,7 +87,46 @@ def update_patient_route(patient_id):
 def disassociate_patient_route(patient_id):
     return patient_controller.disassociate_patient(patient_id)
 
+# --- NEW: Appointment CRUD Endpoints ---
+
+@api_bp.route('/appointments', methods=['POST'])
+@jwt_required()
+@require_permission('appointments', 'write')
+@audit_log("CREATE_APPOINTMENT", "appointments")
+def create_appointment_route():
+    return appointment_controller.create_appointment()
+
+@api_bp.route('/appointments', methods=['GET'])
+@jwt_required()
+@require_permission('appointments', 'read')
+@audit_log("VIEW_ALL_APPOINTMENTS", "appointments")
+def get_appointments_route():
+    return appointment_controller.get_appointments()
+
+@api_bp.route('/appointments/<int:appointment_id>', methods=['GET'])
+@jwt_required()
+@require_permission('appointments', 'read')
+@audit_log("VIEW_APPOINTMENT_DETAIL", "appointments")
+def get_appointment_route(appointment_id):
+    return appointment_controller.get_appointment_by_id(appointment_id)
+
+@api_bp.route('/appointments/<int:appointment_id>', methods=['PUT'])
+@jwt_required()
+@require_permission('appointments', 'write')
+@audit_log("UPDATE_APPOINTMENT", "appointments")
+def update_appointment_route(appointment_id):
+    return appointment_controller.update_appointment(appointment_id)
+
+@api_bp.route('/appointments/<int:appointment_id>', methods=['DELETE'])
+@jwt_required()
+@require_permission('appointments', 'write')
+@audit_log("DELETE_APPOINTMENT", "appointments")
+def delete_appointment_route(appointment_id):
+    return appointment_controller.delete_appointment(appointment_id)
+
+
 # --- Admin & Test Endpoints ---
+# ... (these remain the same) ...
 @api_bp.route('/test-auth', methods=['GET'])
 @jwt_required()
 def test_auth():

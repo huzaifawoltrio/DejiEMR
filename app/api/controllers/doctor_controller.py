@@ -8,15 +8,23 @@ from app.utils.encryption_util import encryptor
 from app.utils.email_util import send_password_email
 
 def _generate_random_password(length=12):
-    alphabet = string.ascii_letters + string.digits + string.punctuation
+    """Generates a secure, random 12-character password with required complexity."""
+    if length != 12:
+        raise ValueError("Password length must be exactly 12 characters for this generator.")
+
+    # Define character sets
+    all_chars = string.ascii_letters + string.digits + string.punctuation
+    
     while True:
-        password = ''.join(secrets.choice(alphabet) for i in range(length))
+        # Generate a random 12-character password
+        password = ''.join(secrets.choice(all_chars) for _ in range(length))
+        
+        # Check if it meets the complexity requirements
         if (any(c.islower() for c in password)
                 and any(c.isupper() for c in password)
                 and any(c.isdigit() for c in password)
                 and any(c in string.punctuation for c in password)):
-            break
-    return password
+            return password
 
 def register_doctor():
     data = request.get_json()
@@ -28,7 +36,6 @@ def register_doctor():
     username = data['username']
     email = data['email']
 
-    # Check for uniqueness using fast, indexed hashed columns
     if User.query.filter_by(username_hash=User.create_hash(username)).first():
         return jsonify({'error': 'Username already exists'}), 409
     if User.query.filter_by(email_hash=User.create_hash(email)).first():
@@ -48,7 +55,6 @@ def register_doctor():
         role_id=doctor_role.id,
         must_change_password=True
     )
-    # Use the model's method to ensure password validation and hashing is consistent
     new_user.set_password(temp_password)
 
     doctor_profile = DoctorProfile(
@@ -57,16 +63,21 @@ def register_doctor():
         last_name=encryptor.encrypt(data['last_name']),
         medical_license_number=encryptor.encrypt(data['medical_license_number']),
         qualifications=encryptor.encrypt(data['qualifications']),
-        # ... other fields ...
+        npi_number=encryptor.encrypt(data.get('npi_number')) if data.get('npi_number') else None,
+        dea_number=encryptor.encrypt(data.get('dea_number')) if data.get('dea_number') else None,
+        profile_picture_url=encryptor.encrypt(data.get('profile_picture_url')) if data.get('profile_picture_url') else None,
+        biography=encryptor.encrypt(data.get('biography')) if data.get('biography') else None,
+        languages_spoken=encryptor.encrypt(data.get('languages_spoken')) if data.get('languages_spoken') else None,
+        department=data.get('department'),
+        specialization=data.get('specialization'),
+        years_of_experience=data.get('years_of_experience'),
+        available_for_telehealth=data.get('available_for_telehealth', False)
     )
 
     try:
         db.session.add(new_user)
-        # The profile is added via the user's backref cascade
         db.session.commit()
-        
         send_password_email(data['email'], data['username'], temp_password)
-
         return jsonify({
             'message': 'Doctor registered successfully. Credentials have been sent to their email.',
             'user_id': new_user.id

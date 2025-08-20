@@ -10,12 +10,22 @@ from app.utils.email_util import send_password_email
 from sqlalchemy.exc import IntegrityError
 
 def _generate_random_password(length=12):
-    """Generates a secure, random password."""
-    alphabet = string.ascii_letters + string.digits + string.punctuation
+    """Generates a secure, random 12-character password with required complexity."""
+    if length != 12:
+        raise ValueError("Password length must be exactly 12 characters for this generator.")
+
+    # Define character sets
+    all_chars = string.ascii_letters + string.digits + string.punctuation
+    
     while True:
-        password = ''.join(secrets.choice(alphabet) for _ in range(length))
-        if (any(c.islower() for c in password) and any(c.isupper() for c in password)
-                and any(c.isdigit() for c in password) and any(c in string.punctuation for c in password)):
+        # Generate a random 12-character password
+        password = ''.join(secrets.choice(all_chars) for _ in range(length))
+        
+        # Check if it meets the complexity requirements
+        if (any(c.islower() for c in password)
+                and any(c.isupper() for c in password)
+                and any(c.isdigit() for c in password)
+                and any(c in string.punctuation for c in password)):
             return password
 
 def _decrypt_patient_data(patient_user):
@@ -81,7 +91,6 @@ def register_patient():
         age=data.get('age')
     )
     
-    # Associate the new patient with the doctor
     doctor.assigned_patients.append(patient_user)
 
     try:
@@ -129,11 +138,15 @@ def update_patient(patient_id):
     data = request.get_json()
     profile = patient.patient_profile
     
-    # Update profile fields
     if 'full_name' in data: profile.full_name = encryptor.encrypt(data['full_name'])
-    # ... update other profile fields as needed ...
+    if 'date_of_birth' in data: profile.date_of_birth = encryptor.encrypt(data['date_of_birth'])
+    if 'gender' in data: profile.gender = encryptor.encrypt(data['gender'])
+    if 'phone_number' in data: profile.phone_number = encryptor.encrypt(data['phone_number'])
+    if 'address' in data: profile.address = encryptor.encrypt(data['address'])
+    if 'presenting_problem' in data: profile.presenting_problem = encryptor.encrypt(data['presenting_problem'])
+    if 'billing_type' in data: profile.billing_type = data['billing_type']
+    if 'age' in data: profile.age = data['age']
 
-    # Update user fields (like email)
     if 'email' in data and encryptor.decrypt(patient.email) != data['email']:
         patient.email = encryptor.encrypt(data['email'])
         patient.email_hash = User.create_hash(data['email'])

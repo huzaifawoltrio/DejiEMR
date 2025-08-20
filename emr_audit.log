@@ -1574,3 +1574,74 @@ WHERE users.username_hash = %(username_hash_1)s
 2025-08-20 11:55:19,464 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 11:55:19] "[35m[1mPOST /api/patients/register HTTP/1.1[0m" 201 -
 2025-08-20 11:57:20,188 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
 2025-08-20 11:57:20,189 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 11:57:20] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-20 12:16:17,379 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-20 12:16:17,379 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-20 12:16:17,382 - werkzeug - INFO -  * Restarting with stat
+2025-08-20 12:16:19,075 - werkzeug - WARNING -  * Debugger is active!
+2025-08-20 12:16:19,085 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-20 12:16:28,670 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-20 12:16:28,671 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 12:16:28] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-20 12:19:49,755 - HIPAA_AUDIT - INFO - Action='PATIENT_REGISTRATION', Resource='patients', UserID='2', Success='False', Details='Request successful. Status: 409'
+2025-08-20 12:19:49,756 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 12:19:49] "[31m[1mPOST /api/patients/register HTTP/1.1[0m" 409 -
+2025-08-20 12:20:32,380 - app - INFO - Successfully sent password email to huzaifaalix@gmail.com
+2025-08-20 12:20:32,394 - HIPAA_AUDIT - INFO - Action='PATIENT_REGISTRATION', Resource='patients', UserID='2', Success='True', Details='Request successful. Status: 201'
+2025-08-20 12:20:32,395 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 12:20:32] "[35m[1mPOST /api/patients/register HTTP/1.1[0m" 201 -
+2025-08-20 12:23:31,723 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-20 12:23:31,723 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 12:23:31] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-20 12:23:39,326 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-20 12:23:39,327 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 12:23:39] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-20 12:25:46,305 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 12:25:46] "[31m[1mPOST /api/appointments HTTP/1.1[0m" 403 -
+2025-08-20 12:27:46,387 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 12:27:46] "[31m[1mPOST /api/appointments HTTP/1.1[0m" 403 -
+2025-08-20 12:27:56,213 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-20 12:27:56,214 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 12:27:56] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-20 12:28:08,642 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 12:28:08] "[31m[1mPOST /api/appointments HTTP/1.1[0m" 403 -
+2025-08-20 12:31:32,060 - werkzeug - INFO -  * Detected change in 'E:\\woltrio\\DejiEMRAPI\\app\\api\\controllers\\appointment_controller.py', reloading
+2025-08-20 12:31:32,246 - werkzeug - INFO -  * Restarting with stat
+2025-08-20 12:31:34,590 - werkzeug - WARNING -  * Debugger is active!
+2025-08-20 12:31:34,600 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-20 12:31:36,626 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 12:31:36] "[31m[1mPOST /api/appointments HTTP/1.1[0m" 403 -
+2025-08-20 12:31:48,548 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-20 12:31:48,548 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 12:31:48] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-20 12:32:19,893 - HIPAA_AUDIT - INFO - Action='VIEW_ALL_PATIENTS', Resource='patients', UserID='2', Success='True', Details='Request successful. Status: 200'
+2025-08-20 12:32:19,894 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 12:32:19] "GET /api/patients HTTP/1.1" 200 -
+2025-08-20 12:39:45,136 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-20 12:39:45,136 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-20 12:39:45,139 - werkzeug - INFO -  * Restarting with stat
+2025-08-20 12:39:47,201 - werkzeug - WARNING -  * Debugger is active!
+2025-08-20 12:39:47,212 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-20 12:40:10,911 - HIPAA_AUDIT - INFO - Action='USER_REGISTRATION', Resource='users', UserID='1', Success='True', Details='Request successful. Status: 201'
+2025-08-20 12:40:10,911 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 12:40:10] "[35m[1mPOST /api/auth/register HTTP/1.1[0m" 201 -
+2025-08-20 12:40:16,825 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-20 12:40:16,826 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 12:40:16] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-20 12:40:37,119 - app - INFO - Successfully sent password email to zayfadeveloper@gmail.com
+2025-08-20 12:40:37,129 - HIPAA_AUDIT - INFO - Action='DOCTOR_REGISTRATION', Resource='doctors', UserID='2', Success='True', Details='Request successful. Status: 201'
+2025-08-20 12:40:37,130 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 12:40:37] "[35m[1mPOST /api/doctors/register HTTP/1.1[0m" 201 -
+2025-08-20 12:41:33,245 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-20 12:41:33,246 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 12:41:33] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-20 12:41:55,083 - app - INFO - Successfully sent password email to huzaifaalix@gmail.com
+2025-08-20 12:41:55,099 - HIPAA_AUDIT - INFO - Action='PATIENT_REGISTRATION', Resource='patients', UserID='2', Success='True', Details='Request successful. Status: 201'
+2025-08-20 12:41:55,099 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 12:41:55] "[35m[1mPOST /api/patients/register HTTP/1.1[0m" 201 -
+2025-08-20 12:42:27,226 - HIPAA_AUDIT - INFO - Action='CREATE_APPOINTMENT', Resource='appointments', UserID='2', Success='True', Details='Request successful. Status: 201'
+2025-08-20 12:42:27,227 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 12:42:27] "[35m[1mPOST /api/appointments HTTP/1.1[0m" 201 -
+2025-08-20 12:52:36,428 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='False', Details='Request successful. Status: 401'
+2025-08-20 12:52:36,429 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 12:52:36] "[31m[1mPOST /api/auth/login HTTP/1.1[0m" 401 -
+2025-08-20 12:58:51,792 - werkzeug - INFO -  * Detected change in 'E:\\woltrio\\DejiEMRAPI\\app\\api\\controllers\\doctor_controller.py', reloading
+2025-08-20 12:58:51,991 - werkzeug - INFO -  * Restarting with stat
+2025-08-20 12:58:53,979 - werkzeug - WARNING -  * Debugger is active!
+2025-08-20 12:58:53,988 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-20 12:59:10,687 - werkzeug - INFO -  * Detected change in 'E:\\woltrio\\DejiEMRAPI\\app\\api\\controllers\\patient_controller.py', reloading
+2025-08-20 12:59:10,849 - werkzeug - INFO -  * Restarting with stat
+2025-08-20 12:59:12,845 - werkzeug - WARNING -  * Debugger is active!
+2025-08-20 12:59:12,855 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-20 12:59:46,121 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 12:59:46] "[31m[1mPOST /api/patients/register HTTP/1.1[0m" 401 -
+2025-08-20 12:59:56,118 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-20 12:59:56,119 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 12:59:56] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-20 13:00:22,305 - app - INFO - Successfully sent password email to huzaifaali2002@gmail.com
+2025-08-20 13:00:22,318 - HIPAA_AUDIT - INFO - Action='PATIENT_REGISTRATION', Resource='patients', UserID='2', Success='True', Details='Request successful. Status: 201'
+2025-08-20 13:00:22,319 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 13:00:22] "[35m[1mPOST /api/patients/register HTTP/1.1[0m" 201 -
+2025-08-20 13:01:46,774 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-20 13:01:46,775 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 13:01:46] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-20 13:02:20,655 - HIPAA_AUDIT - INFO - Action='CREATE_APPOINTMENT', Resource='appointments', UserID='4', Success='True', Details='Request successful. Status: 201'
+2025-08-20 13:02:20,655 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 13:02:20] "[35m[1mPOST /api/appointments HTTP/1.1[0m" 201 -

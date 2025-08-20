@@ -10,6 +10,7 @@ def init_db_command():
     db.create_all()
     
     # --- Create default roles ---
+    # ... (no changes here) ...
     roles_data = [
         {'name': 'superadmin', 'description': 'Full system access'},
         {'name': 'admin', 'description': 'Administrative access'},
@@ -29,6 +30,10 @@ def init_db_command():
         {'name': 'write_patients', 'resource': 'patients', 'action': 'write'},
         {'name': 'read_doctors', 'resource': 'doctors', 'action': 'read'},
         {'name': 'write_doctors', 'resource': 'doctors', 'action': 'write'},
+        # NEW: Appointment permissions
+        {'name': 'read_appointments', 'resource': 'appointments', 'action': 'read'},
+        {'name': 'write_appointments', 'resource': 'appointments', 'action': 'write'},
+        # User & System Permissions
         {'name': 'admin_users', 'resource': 'users', 'action': 'admin'},
         {'name': 'view_audit', 'resource': 'audit', 'action': 'read'},
     ]
@@ -41,26 +46,23 @@ def init_db_command():
     superadmin = Role.query.filter_by(name='superadmin').first()
     admin = Role.query.filter_by(name='admin').first()
     doctor = Role.query.filter_by(name='doctor').first()
-
-    write_doctors_perm = Permission.query.filter_by(name='write_doctors').first()
-    read_doctors_perm = Permission.query.filter_by(name='read_doctors').first()
-    write_patients_perm = Permission.query.filter_by(name='write_patients').first()
-    read_patients_perm = Permission.query.filter_by(name='read_patients').first()
-    view_audit_perm = Permission.query.filter_by(name='view_audit').first()
+    patient = Role.query.filter_by(name='patient').first()
 
     # Superadmin gets all permissions
     superadmin.permissions = Permission.query.all()
     
-    # Admin gets permissions to view data and audits, but not create doctors
-    admin.permissions = [
-        read_patients_perm, 
-        write_patients_perm,
-        read_doctors_perm,
-        view_audit_perm
-    ]
+    # Admin gets most view/audit permissions
+    admin.permissions = [p for p in Permission.query.all() if p.action == 'read']
 
-    # Doctor gets patient-related read/write permissions
-    doctor.permissions = [read_patients_perm, write_patients_perm]
+    # Doctor gets permissions for patients and appointments
+    doctor.permissions = Permission.query.filter(
+        Permission.resource.in_(['patients', 'appointments'])
+    ).all()
+
+    # Patient gets permissions for their own appointments
+    patient.permissions = Permission.query.filter(
+        Permission.resource == 'appointments'
+    ).all()
 
     db.session.commit()
     
