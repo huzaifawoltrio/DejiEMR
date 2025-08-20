@@ -1,8 +1,10 @@
 import hashlib
 from datetime import datetime, timedelta
 from app.extensions import db, bcrypt
+from app.models.patient_models import Patient 
 
-# Association table for many-to-many relationship
+# --- Association table for many-to-many relationship ---
+# MOVED: This must be defined before the Role and Permission models that use it.
 role_permissions = db.Table('role_permissions',
     db.Column('role_id', db.Integer, db.ForeignKey('roles.id'), primary_key=True),
     db.Column('permission_id', db.Integer, db.ForeignKey('permissions.id'), primary_key=True)
@@ -13,17 +15,12 @@ class User(db.Model):
     __tablename__ = 'users'
     
     id = db.Column(db.Integer, primary_key=True)
-    # Encrypted PII fields for storage
     username = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), nullable=False)
-    
-    # Hashed, indexed columns for fast, secure lookups
     username_hash = db.Column(db.String(64), unique=True, nullable=False, index=True)
     email_hash = db.Column(db.String(64), unique=True, nullable=False, index=True)
-
     password_hash = db.Column(db.String(255), nullable=False)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), nullable=False)
-    
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     last_login = db.Column(db.DateTime)
@@ -34,13 +31,14 @@ class User(db.Model):
     must_change_password = db.Column(db.Boolean, default=False)
     is_active = db.Column(db.Boolean, default=True)
     
+    # --- Relationships ---
     role = db.relationship('Role', backref='users')
     audit_logs = db.relationship('AuditLog', backref='user', lazy='dynamic')
     doctor_profile = db.relationship('DoctorProfile', backref='user', uselist=False, cascade="all, delete-orphan")
+    patients = db.relationship('Patient', back_populates='doctor', lazy='dynamic', cascade="all, delete-orphan")
 
     @staticmethod
     def create_hash(value: str) -> str:
-        """Creates a SHA-256 hash for a given string."""
         if not value:
             return ""
         return hashlib.sha256(value.lower().encode('utf-8')).hexdigest()
@@ -52,9 +50,6 @@ class User(db.Model):
         self.password_changed_at = datetime.utcnow()
     
     def check_password(self, password: str) -> bool:
-        # NOTE: This method contains business logic (locking, attempt counting) and a db.commit().
-        # In a larger application, this logic should be moved to a dedicated service layer
-        # to improve separation of concerns and transactional control.
         if self.account_locked and self.account_locked_until and datetime.utcnow() < self.account_locked_until:
             return False
         elif self.account_locked:

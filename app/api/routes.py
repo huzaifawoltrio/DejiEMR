@@ -4,6 +4,7 @@ from app.extensions import limiter
 from app.utils.decorators import audit_log, require_permission
 from .controllers import auth_controller, user_controller, patient_controller, doctor_controller
 
+# ... (Authentication and Doctor endpoints remain the same) ...
 # --- Authentication Endpoints ---
 @api_bp.route('/auth/register', methods=['POST'])
 @limiter.limit("5 per hour")
@@ -50,13 +51,44 @@ def register_doctor():
 def get_doctors():
     return doctor_controller.get_all_doctors()
 
-# --- Patient Endpoints ---
+
+# --- NEW: Patient CRUD Endpoints ---
+
+@api_bp.route('/patients', methods=['POST'])
+@jwt_required()
+@require_permission('patients', 'write')
+@audit_log("CREATE_PATIENT", "patients")
+def create_patient_route():
+    return patient_controller.create_patient()
+
 @api_bp.route('/patients', methods=['GET'])
 @jwt_required()
 @require_permission('patients', 'read')
-@audit_log("VIEW_PATIENTS", "patients")
-def get_patients():
-    return patient_controller.get_all_patients()
+@audit_log("VIEW_ALL_PATIENTS", "patients")
+def get_patients_route():
+    return patient_controller.get_all_patients_for_doctor()
+
+@api_bp.route('/patients/<int:patient_id>', methods=['GET'])
+@jwt_required()
+@require_permission('patients', 'read')
+@audit_log("VIEW_PATIENT_DETAIL", "patients")
+def get_patient_route(patient_id):
+    return patient_controller.get_patient_by_id(patient_id)
+
+@api_bp.route('/patients/<int:patient_id>', methods=['PUT'])
+@jwt_required()
+@require_permission('patients', 'write')
+@audit_log("UPDATE_PATIENT", "patients")
+def update_patient_route(patient_id):
+    return patient_controller.update_patient(patient_id)
+
+@api_bp.route('/patients/<int:patient_id>', methods=['DELETE'])
+@jwt_required()
+@require_permission('patients', 'write')
+@audit_log("DELETE_PATIENT", "patients")
+def delete_patient_route(patient_id):
+    return patient_controller.delete_patient(patient_id)
+
 
 # --- Admin & Test Endpoints ---
 @api_bp.route('/test-auth', methods=['GET'])
