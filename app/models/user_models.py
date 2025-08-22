@@ -36,6 +36,10 @@ class User(db.Model):
     password_changed_at = db.Column(db.DateTime, default=datetime.utcnow)
     must_change_password = db.Column(db.Boolean, default=False)
     is_active = db.Column(db.Boolean, default=True)
+    
+    # Profile picture fields
+    profile_picture_url = db.Column(db.String(1024))  # Encrypted Cloudinary URL
+    profile_picture_public_id = db.Column(db.String(512))  # Encrypted Cloudinary public_id
 
     # --- Existing Relationships ---
     role = db.relationship('Role', backref='users')
@@ -125,7 +129,6 @@ class DoctorProfile(db.Model):
     qualifications = db.Column(db.Text, nullable=False)
     npi_number = db.Column(db.String(255), unique=True)
     dea_number = db.Column(db.String(255), unique=True)
-    profile_picture_url = db.Column(db.String(512))
     biography = db.Column(db.Text)
     languages_spoken = db.Column(db.String(255))
     department = db.Column(db.String(100))

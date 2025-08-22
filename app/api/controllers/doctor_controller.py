@@ -65,7 +65,6 @@ def register_doctor():
         qualifications=encryptor.encrypt(data['qualifications']),
         npi_number=encryptor.encrypt(data.get('npi_number')) if data.get('npi_number') else None,
         dea_number=encryptor.encrypt(data.get('dea_number')) if data.get('dea_number') else None,
-        profile_picture_url=encryptor.encrypt(data.get('profile_picture_url')) if data.get('profile_picture_url') else None,
         biography=encryptor.encrypt(data.get('biography')) if data.get('biography') else None,
         languages_spoken=encryptor.encrypt(data.get('languages_spoken')) if data.get('languages_spoken') else None,
         department=data.get('department'),

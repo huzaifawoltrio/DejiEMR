@@ -87,8 +87,7 @@ def update_patient_route(patient_id):
 def disassociate_patient_route(patient_id):
     return patient_controller.disassociate_patient(patient_id)
 
-# --- NEW: Appointment CRUD Endpoints ---
-
+# --- Appointment CRUD Endpoints ---
 @api_bp.route('/appointments', methods=['POST'])
 @jwt_required()
 @require_permission('appointments', 'write')
@@ -124,9 +123,37 @@ def update_appointment_route(appointment_id):
 def delete_appointment_route(appointment_id):
     return appointment_controller.delete_appointment(appointment_id)
 
+# --- Profile Picture Endpoints ---
+@api_bp.route('/profile/picture', methods=['POST'])
+@jwt_required()
+@limiter.limit("3 per minute")
+@audit_log("UPLOAD_PROFILE_PICTURE", "profile")
+def upload_profile_picture_route():
+    from .controllers import profile_controller
+    return profile_controller.upload_profile_picture()
+
+@api_bp.route('/profile/picture', methods=['GET'])
+@jwt_required()
+@audit_log("VIEW_PROFILE_PICTURE", "profile")
+def get_profile_picture_route():
+    from .controllers import profile_controller
+    return profile_controller.get_profile_picture()
+
+@api_bp.route('/profile/picture', methods=['DELETE'])
+@jwt_required()
+@audit_log("DELETE_PROFILE_PICTURE", "profile")
+def delete_profile_picture_route():
+    from .controllers import profile_controller
+    return profile_controller.delete_profile_picture()
+
+@api_bp.route('/users/<int:user_id>/picture', methods=['GET'])
+@jwt_required()
+@audit_log("VIEW_USER_PROFILE_PICTURE", "profile")
+def get_user_profile_picture_route(user_id):
+    from .controllers import profile_controller
+    return profile_controller.get_user_profile_picture(user_id)
 
 # --- Admin & Test Endpoints ---
-# ... (these remain the same) ...
 @api_bp.route('/test-auth', methods=['GET'])
 @jwt_required()
 def test_auth():

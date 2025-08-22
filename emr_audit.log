@@ -1645,3 +1645,226 @@ WHERE users.username_hash = %(username_hash_1)s
 2025-08-20 13:01:46,775 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 13:01:46] "POST /api/auth/login HTTP/1.1" 200 -
 2025-08-20 13:02:20,655 - HIPAA_AUDIT - INFO - Action='CREATE_APPOINTMENT', Resource='appointments', UserID='4', Success='True', Details='Request successful. Status: 201'
 2025-08-20 13:02:20,655 - werkzeug - INFO - 127.0.0.1 - - [20/Aug/2025 13:02:20] "[35m[1mPOST /api/appointments HTTP/1.1[0m" 201 -
+2025-08-21 15:51:45,521 - flask_migrate - ERROR - Error: Directory migrations already exists and is not empty
+2025-08-21 15:54:46,978 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-21 15:54:46,978 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-21 15:54:46,981 - werkzeug - INFO -  * Restarting with stat
+2025-08-21 15:54:48,689 - werkzeug - WARNING -  * Debugger is active!
+2025-08-21 15:54:48,696 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-21 15:55:19,926 - HIPAA_AUDIT - INFO - Action='USER_REGISTRATION', Resource='users', UserID='1', Success='True', Details='Request successful. Status: 201'
+2025-08-21 15:55:19,927 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 15:55:19] "[35m[1mPOST /api/auth/register HTTP/1.1[0m" 201 -
+2025-08-21 15:55:25,720 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-21 15:55:25,721 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 15:55:25] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-21 15:55:48,717 - HIPAA_AUDIT - INFO - Action='VIEW_ALL_PATIENTS', Resource='patients', UserID='1', Success='True', Details='Request successful. Status: 200'
+2025-08-21 15:55:48,718 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 15:55:48] "GET /api/patients HTTP/1.1" 200 -
+2025-08-21 15:56:21,796 - app - INFO - Successfully sent password email to zayfadeveloper@gmail.com
+2025-08-21 15:56:21,800 - HIPAA_AUDIT - INFO - Action='DOCTOR_REGISTRATION', Resource='doctors', UserID='2', Success='True', Details='Request successful. Status: 201'
+2025-08-21 15:56:21,801 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 15:56:21] "[35m[1mPOST /api/doctors/register HTTP/1.1[0m" 201 -
+2025-08-21 15:57:00,699 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-21 15:57:00,699 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 15:57:00] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-21 15:58:36,810 - werkzeug - INFO -  * Detected change in 'E:\\woltrio\\DejiEMRAPI\\config.py', reloading
+2025-08-21 15:58:36,990 - werkzeug - INFO -  * Restarting with stat
+2025-08-21 15:58:39,348 - werkzeug - WARNING -  * Debugger is active!
+2025-08-21 15:58:39,357 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-21 15:58:55,888 - werkzeug - INFO -  * Detected change in 'E:\\woltrio\\DejiEMRAPI\\app\\__init__.py', reloading
+2025-08-21 15:58:56,043 - werkzeug - INFO -  * Restarting with stat
+2025-08-21 15:58:58,216 - werkzeug - WARNING -  * Debugger is active!
+2025-08-21 15:58:58,229 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-21 16:02:49,413 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-21 16:02:49,414 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 16:02:49] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-21 16:03:28,435 - HIPAA_AUDIT - ERROR - Action='UPLOAD_PROFILE_PICTURE', Resource='profile', UserID='2', Success='False', Details='An error occurred: cannot import name 'profile_controller' from 'app.api.controllers' (E:\woltrio\DejiEMRAPI\app\api\controllers\__init__.py)'
+2025-08-21 16:03:28,456 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 16:03:28] "[35m[1mPOST /api/profile/picture HTTP/1.1[0m" 500 -
+2025-08-21 16:11:51,832 - werkzeug - INFO -  * Detected change in 'E:\\woltrio\\DejiEMRAPI\\app\\utils\\cloudinary_util.py', reloading
+2025-08-21 16:11:52,029 - werkzeug - INFO -  * Restarting with stat
+2025-08-21 16:11:54,016 - werkzeug - WARNING -  * Debugger is active!
+2025-08-21 16:11:54,023 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-21 16:12:21,950 - werkzeug - INFO -  * Detected change in 'E:\\woltrio\\DejiEMRAPI\\app\\api\\controllers\\profile_controller.py', reloading
+2025-08-21 16:12:22,192 - werkzeug - INFO -  * Restarting with stat
+2025-08-21 16:12:24,238 - werkzeug - WARNING -  * Debugger is active!
+2025-08-21 16:12:24,246 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-21 16:12:31,002 - HIPAA_AUDIT - INFO - Action='UPLOAD_PROFILE_PICTURE', Resource='profile', UserID='2', Success='False', Details='Request successful. Status: 400'
+2025-08-21 16:12:31,003 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 16:12:31] "[31m[1mPOST /api/profile/picture HTTP/1.1[0m" 400 -
+2025-08-21 16:12:40,509 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-21 16:12:40,510 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 16:12:40] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-21 16:13:00,115 - HIPAA_AUDIT - INFO - Action='UPLOAD_PROFILE_PICTURE', Resource='profile', UserID='2', Success='False', Details='Request successful. Status: 400'
+2025-08-21 16:13:00,116 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 16:13:00] "[31m[1mPOST /api/profile/picture HTTP/1.1[0m" 400 -
+2025-08-21 16:14:14,423 - werkzeug - INFO -  * Detected change in 'E:\\woltrio\\DejiEMRAPI\\app\\api\\controllers\\profile_controller.py', reloading
+2025-08-21 16:14:14,823 - werkzeug - INFO -  * Restarting with stat
+2025-08-21 16:14:18,965 - werkzeug - WARNING -  * Debugger is active!
+2025-08-21 16:14:18,978 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-21 16:14:21,171 - app - INFO - Request files keys: []
+2025-08-21 16:14:21,171 - app - INFO - Request form keys: [None]
+2025-08-21 16:14:21,172 - app - INFO - Content type: multipart/form-data; boundary=--------------------------106156632209375113833652
+2025-08-21 16:14:21,181 - HIPAA_AUDIT - INFO - Action='UPLOAD_PROFILE_PICTURE', Resource='profile', UserID='2', Success='False', Details='Request successful. Status: 400'
+2025-08-21 16:14:21,183 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 16:14:21] "[31m[1mPOST /api/profile/picture HTTP/1.1[0m" 400 -
+2025-08-21 16:19:34,043 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-21 16:19:34,043 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-21 16:19:34,046 - werkzeug - INFO -  * Restarting with stat
+2025-08-21 16:19:35,716 - werkzeug - WARNING -  * Debugger is active!
+2025-08-21 16:19:35,723 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-21 16:21:42,273 - app - INFO - Request files keys: []
+2025-08-21 16:21:42,273 - app - INFO - Request form keys: [None]
+2025-08-21 16:21:42,273 - app - INFO - Content type: multipart/form-data; boundary=--------------------------460136290697675240952791
+2025-08-21 16:21:42,284 - HIPAA_AUDIT - INFO - Action='UPLOAD_PROFILE_PICTURE', Resource='profile', UserID='2', Success='False', Details='Request successful. Status: 400'
+2025-08-21 16:21:42,285 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 16:21:42] "[31m[1mPOST /api/profile/picture HTTP/1.1[0m" 400 -
+2025-08-21 16:22:26,850 - app - INFO - Request files keys: ['file']
+2025-08-21 16:22:26,850 - app - INFO - Request form keys: []
+2025-08-21 16:22:26,850 - app - INFO - Content type: multipart/form-data; boundary=--------------------------163539854582769308911583
+2025-08-21 16:22:26,850 - app - INFO - Found file with key: file
+2025-08-21 16:22:29,635 - HIPAA_AUDIT - INFO - Action='UPLOAD_PROFILE_PICTURE', Resource='profile', UserID='2', Success='True', Details='Request successful. Status: 200'
+2025-08-21 16:22:29,636 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 16:22:29] "POST /api/profile/picture HTTP/1.1" 200 -
+2025-08-21 16:23:08,442 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-21 16:23:08,443 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 16:23:08] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-21 16:27:01,689 - werkzeug - INFO -  * Detected change in 'E:\\woltrio\\DejiEMRAPI\\app\\api\\controllers\\profile_controller.py', reloading
+2025-08-21 16:27:01,899 - werkzeug - INFO -  * Restarting with stat
+2025-08-21 16:27:04,111 - werkzeug - WARNING -  * Debugger is active!
+2025-08-21 16:27:04,120 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-21 16:27:10,765 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-21 16:27:10,766 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 16:27:10] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-21 16:28:18,860 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 16:28:18] "[31m[1mPOST /api/profile/picture HTTP/1.1[0m" 401 -
+2025-08-21 16:28:25,300 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-21 16:28:25,301 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 16:28:25] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-21 16:28:36,979 - app - INFO - Request files keys: ['file']
+2025-08-21 16:28:36,979 - app - INFO - Request form keys: []
+2025-08-21 16:28:36,979 - app - INFO - Content type: multipart/form-data; boundary=--------------------------434905605310562261485175
+2025-08-21 16:28:36,979 - app - INFO - Found file with key: file
+2025-08-21 16:28:42,544 - app - INFO - Original URL length: 136
+2025-08-21 16:28:42,544 - app - INFO - Encrypted URL length: 268
+2025-08-21 16:28:42,544 - app - INFO - Database column limit is 1024 characters.
+2025-08-21 16:28:42,555 - HIPAA_AUDIT - INFO - Action='UPLOAD_PROFILE_PICTURE', Resource='profile', UserID='2', Success='True', Details='Request successful. Status: 200'
+2025-08-21 16:28:42,555 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 16:28:42] "POST /api/profile/picture HTTP/1.1" 200 -
+2025-08-21 16:33:17,296 - werkzeug - INFO -  * Detected change in 'E:\\woltrio\\DejiEMRAPI\\app\\utils\\cloudinary_util.py', reloading
+2025-08-21 16:33:17,529 - werkzeug - INFO -  * Restarting with stat
+2025-08-21 16:33:20,252 - werkzeug - WARNING -  * Debugger is active!
+2025-08-21 16:33:20,262 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-21 16:35:14,437 - werkzeug - INFO -  * Detected change in 'E:\\woltrio\\DejiEMRAPI\\app\\utils\\cloudinary_util.py', reloading
+2025-08-21 16:35:14,631 - werkzeug - INFO -  * Restarting with stat
+2025-08-21 16:35:17,239 - werkzeug - WARNING -  * Debugger is active!
+2025-08-21 16:35:17,248 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-21 16:35:21,740 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-21 16:35:21,741 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 16:35:21] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-21 16:35:30,503 - app - INFO - Request files keys: ['file']
+2025-08-21 16:35:30,504 - app - INFO - Request form keys: []
+2025-08-21 16:35:30,504 - app - INFO - Content type: multipart/form-data; boundary=--------------------------968761264603051949284390
+2025-08-21 16:35:30,504 - app - INFO - Found file with key: file
+2025-08-21 16:35:33,305 - app - INFO - Original URL length: 141
+2025-08-21 16:35:33,305 - app - INFO - Encrypted URL length: 268
+2025-08-21 16:35:33,305 - app - INFO - Database column limit is 1024 characters.
+2025-08-21 16:35:33,316 - HIPAA_AUDIT - INFO - Action='UPLOAD_PROFILE_PICTURE', Resource='profile', UserID='2', Success='True', Details='Request successful. Status: 200'
+2025-08-21 16:35:33,316 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 16:35:33] "POST /api/profile/picture HTTP/1.1" 200 -
+2025-08-21 16:41:54,369 - werkzeug - INFO -  * Detected change in 'E:\\woltrio\\DejiEMRAPI\\app\\api\\controllers\\profile_controller.py', reloading
+2025-08-21 16:41:54,609 - werkzeug - INFO -  * Restarting with stat
+2025-08-21 16:41:56,559 - werkzeug - WARNING -  * Debugger is active!
+2025-08-21 16:41:56,566 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-21 16:42:02,855 - app - INFO - Request files keys: ['file']
+2025-08-21 16:42:02,855 - app - INFO - Found file with key: file
+2025-08-21 16:42:07,615 - app - INFO - Original URL length: 141
+2025-08-21 16:42:07,616 - app - INFO - Encrypted URL length: 268
+2025-08-21 16:42:07,616 - app - INFO - Database column limit is 1024 characters.
+2025-08-21 16:42:07,632 - HIPAA_AUDIT - INFO - Action='UPLOAD_PROFILE_PICTURE', Resource='profile', UserID='2', Success='True', Details='Request successful. Status: 200'
+2025-08-21 16:42:07,633 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 16:42:07] "POST /api/profile/picture HTTP/1.1" 200 -
+2025-08-21 16:47:58,389 - werkzeug - INFO -  * Detected change in 'E:\\woltrio\\DejiEMRAPI\\app\\models\\user_models.py', reloading
+2025-08-21 16:47:58,752 - werkzeug - INFO -  * Restarting with stat
+2025-08-21 16:48:01,150 - werkzeug - WARNING -  * Debugger is active!
+2025-08-21 16:48:01,162 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-21 16:55:57,727 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-21 16:55:57,727 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-21 16:55:57,730 - werkzeug - INFO -  * Restarting with stat
+2025-08-21 16:55:59,611 - werkzeug - WARNING -  * Debugger is active!
+2025-08-21 16:55:59,619 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-21 16:56:11,016 - HIPAA_AUDIT - INFO - Action='USER_REGISTRATION', Resource='users', UserID='1', Success='True', Details='Request successful. Status: 201'
+2025-08-21 16:56:11,017 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 16:56:11] "[35m[1mPOST /api/auth/register HTTP/1.1[0m" 201 -
+2025-08-21 16:56:14,931 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-21 16:56:14,931 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 16:56:14] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-21 16:56:34,609 - HIPAA_AUDIT - ERROR - Action='DOCTOR_REGISTRATION', Resource='doctors', UserID='1', Success='False', Details='An error occurred: 'profile_picture_url' is an invalid keyword argument for DoctorProfile'
+2025-08-21 16:56:34,650 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 16:56:34] "[35m[1mPOST /api/doctors/register HTTP/1.1[0m" 500 -
+2025-08-21 16:56:52,619 - HIPAA_AUDIT - ERROR - Action='DOCTOR_REGISTRATION', Resource='doctors', UserID='1', Success='False', Details='An error occurred: 'profile_picture_url' is an invalid keyword argument for DoctorProfile'
+2025-08-21 16:56:52,650 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 16:56:52] "[35m[1mPOST /api/doctors/register HTTP/1.1[0m" 500 -
+2025-08-21 17:00:15,405 - werkzeug - INFO -  * Detected change in 'E:\\woltrio\\DejiEMRAPI\\app\\api\\controllers\\doctor_controller.py', reloading
+2025-08-21 17:00:15,591 - werkzeug - INFO -  * Restarting with stat
+2025-08-21 17:00:17,697 - werkzeug - WARNING -  * Debugger is active!
+2025-08-21 17:00:17,713 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-21 17:00:29,529 - HIPAA_AUDIT - ERROR - Action='DOCTOR_REGISTRATION', Resource='doctors', UserID='1', Success='False', Details='An error occurred: Password does not meet complexity requirements'
+2025-08-21 17:00:29,561 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 17:00:29] "[35m[1mPOST /api/doctors/register HTTP/1.1[0m" 500 -
+2025-08-21 17:00:47,344 - werkzeug - INFO -  * Detected change in 'E:\\woltrio\\DejiEMRAPI\\app\\api\\controllers\\doctor_controller.py', reloading
+2025-08-21 17:00:47,584 - werkzeug - INFO -  * Restarting with stat
+2025-08-21 17:00:49,685 - werkzeug - WARNING -  * Debugger is active!
+2025-08-21 17:00:49,695 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-21 17:45:07,881 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-21 17:45:07,882 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-21 17:45:07,885 - werkzeug - INFO -  * Restarting with stat
+2025-08-21 17:45:09,376 - werkzeug - WARNING -  * Debugger is active!
+2025-08-21 17:45:09,384 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-21 17:45:49,255 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-21 17:45:49,256 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 17:45:49] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-21 17:46:06,448 - HIPAA_AUDIT - ERROR - Action='DOCTOR_REGISTRATION', Resource='doctors', UserID='1', Success='False', Details='An error occurred: 'profile_picture_url' is an invalid keyword argument for DoctorProfile'
+2025-08-21 17:46:06,484 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 17:46:06] "[35m[1mPOST /api/doctors/register HTTP/1.1[0m" 500 -
+2025-08-21 17:47:43,308 - werkzeug - INFO -  * Detected change in 'E:\\woltrio\\DejiEMRAPI\\app\\api\\controllers\\doctor_controller.py', reloading
+2025-08-21 17:47:43,619 - werkzeug - INFO -  * Restarting with stat
+2025-08-21 17:47:45,769 - werkzeug - WARNING -  * Debugger is active!
+2025-08-21 17:47:45,782 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-21 17:47:50,742 - app - INFO - Successfully sent password email to zayfadeveloper@gmail.com
+2025-08-21 17:47:50,756 - HIPAA_AUDIT - INFO - Action='DOCTOR_REGISTRATION', Resource='doctors', UserID='2', Success='True', Details='Request successful. Status: 201'
+2025-08-21 17:47:50,757 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 17:47:50] "[35m[1mPOST /api/doctors/register HTTP/1.1[0m" 201 -
+2025-08-21 17:48:28,708 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-21 17:48:28,709 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 17:48:28] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-21 17:49:10,336 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-21 17:49:10,337 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 17:49:10] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-21 17:50:07,248 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-21 17:50:07,249 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 17:50:07] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-21 17:52:27,085 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-21 17:52:27,085 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 17:52:27] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-21 17:58:29,309 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-21 17:58:29,310 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-21 17:58:29,313 - werkzeug - INFO -  * Restarting with stat
+2025-08-21 17:58:31,121 - werkzeug - WARNING -  * Debugger is active!
+2025-08-21 17:58:31,133 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-21 17:58:37,874 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-21 17:58:37,875 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 17:58:37] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-21 18:02:08,599 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-21 18:02:08,600 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 18:02:08] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-21 18:06:13,932 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-21 18:06:13,932 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 18:06:13] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-21 18:12:08,932 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-21 18:12:08,933 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 18:12:08] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-21 18:17:07,675 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-21 18:17:07,675 - werkzeug - INFO - 127.0.0.1 - - [21/Aug/2025 18:17:07] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-22 10:31:53,867 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-22 10:31:53,867 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-22 10:31:53,870 - werkzeug - INFO -  * Restarting with stat
+2025-08-22 10:31:55,629 - werkzeug - WARNING -  * Debugger is active!
+2025-08-22 10:31:55,642 - werkzeug - INFO -  * Debugger PIN: 137-844-133
+2025-08-22 10:31:59,835 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-22 10:31:59,837 - werkzeug - INFO - 127.0.0.1 - - [22/Aug/2025 10:31:59] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-22 10:35:28,857 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-22 10:35:28,858 - werkzeug - INFO - 127.0.0.1 - - [22/Aug/2025 10:35:28] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-22 10:35:43,256 - werkzeug - INFO - 127.0.0.1 - - [22/Aug/2025 10:35:43] "[31m[1mPOST /api/profile/picture HTTP/1.1[0m" 401 -
+2025-08-22 10:37:36,840 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-22 10:37:36,840 - werkzeug - INFO - 127.0.0.1 - - [22/Aug/2025 10:37:36] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-22 10:41:17,343 - HIPAA_AUDIT - ERROR - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='False', Details='An error occurred: 415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.'
+2025-08-22 10:41:17,345 - werkzeug - INFO - 127.0.0.1 - - [22/Aug/2025 10:41:17] "[31m[1mPOST /api/auth/login HTTP/1.1[0m" 415 -
+2025-08-22 10:41:43,039 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-22 10:41:43,039 - werkzeug - INFO - 127.0.0.1 - - [22/Aug/2025 10:41:43] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-22 10:50:47,507 - HIPAA_AUDIT - ERROR - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='False', Details='An error occurred: 415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.'
+2025-08-22 10:50:47,508 - werkzeug - INFO - 127.0.0.1 - - [22/Aug/2025 10:50:47] "[31m[1mPOST /api/auth/login HTTP/1.1[0m" 415 -
+2025-08-22 10:50:57,844 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-22 10:50:57,844 - werkzeug - INFO - 127.0.0.1 - - [22/Aug/2025 10:50:57] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-22 10:58:02,295 - HIPAA_AUDIT - ERROR - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='False', Details='An error occurred: 415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.'
+2025-08-22 10:58:02,296 - werkzeug - INFO - 127.0.0.1 - - [22/Aug/2025 10:58:02] "[31m[1mPOST /api/auth/login HTTP/1.1[0m" 415 -
+2025-08-22 10:58:10,470 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-22 10:58:10,471 - werkzeug - INFO - 127.0.0.1 - - [22/Aug/2025 10:58:10] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-22 10:59:56,721 - HIPAA_AUDIT - INFO - Action='USER_LOGIN', Resource='authentication', UserID='None', Success='True', Details='Request successful. Status: 200'
+2025-08-22 10:59:56,721 - werkzeug - INFO - 127.0.0.1 - - [22/Aug/2025 10:59:56] "POST /api/auth/login HTTP/1.1" 200 -
+2025-08-22 11:00:39,279 - app - INFO - Request files keys: ['file']
+2025-08-22 11:00:39,279 - app - INFO - Found file with key: file
+2025-08-22 11:00:42,381 - app - INFO - Original URL length: 141
+2025-08-22 11:00:42,381 - app - INFO - Encrypted URL length: 268
+2025-08-22 11:00:42,381 - app - INFO - Database column limit is 1024 characters.
+2025-08-22 11:00:42,398 - HIPAA_AUDIT - INFO - Action='UPLOAD_PROFILE_PICTURE', Resource='profile', UserID='2', Success='True', Details='Request successful. Status: 200'
+2025-08-22 11:00:42,398 - werkzeug - INFO - 127.0.0.1 - - [22/Aug/2025 11:00:42] "POST /api/profile/picture HTTP/1.1" 200 -
