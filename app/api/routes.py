@@ -35,6 +35,17 @@ def refresh():
 def change_password():
     return auth_controller.change_user_password()
 
+
+
+# --- User Profile Endpoint ---
+@api_bp.route('/users/me', methods=['GET'])
+@jwt_required()
+@audit_log("VIEW_OWN_PROFILE", "users")
+def get_current_user_route():
+    return user_controller.get_current_user_details()
+
+
+
 # --- Doctor Endpoints ---
 @api_bp.route('/doctors/register', methods=['POST'])
 @jwt_required()
