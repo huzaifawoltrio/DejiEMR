@@ -77,6 +77,13 @@ def register_patient_route():
 def get_patients_route():
     return patient_controller.get_all_patients_for_doctor()
 
+@api_bp.route('/patients/search/<string:username>', methods=['GET'])
+@jwt_required()
+@require_permission('patients', 'read')
+@audit_log("SEARCH_PATIENT_BY_USERNAME", "patients")
+def get_patient_by_username_route(username):
+    return patient_controller.get_patient_by_username(username)
+
 @api_bp.route('/patients/<int:patient_id>', methods=['GET'])
 @jwt_required()
 @require_permission('patients', 'read')

@@ -11,21 +11,11 @@ from sqlalchemy.exc import IntegrityError
 
 def _generate_random_password(length=12):
     """Generates a secure, random 12-character password with required complexity."""
-    if length != 12:
-        raise ValueError("Password length must be exactly 12 characters for this generator.")
-
-    # Define character sets
     all_chars = string.ascii_letters + string.digits + string.punctuation
-    
     while True:
-        # Generate a random 12-character password
         password = ''.join(secrets.choice(all_chars) for _ in range(length))
-        
-        # Check if it meets the complexity requirements
-        if (any(c.islower() for c in password)
-                and any(c.isupper() for c in password)
-                and any(c.isdigit() for c in password)
-                and any(c in string.punctuation for c in password)):
+        if (any(c.islower() for c in password) and any(c.isupper() for c in password)
+                and any(c.isdigit() for c in password) and any(c in string.punctuation for c in password)):
             return password
 
 def _decrypt_patient_data(patient_user):
@@ -33,30 +23,57 @@ def _decrypt_patient_data(patient_user):
     if not patient_user or not patient_user.patient_profile:
         return None
     profile = patient_user.patient_profile
+    
+    # Helper to safely decrypt a field
+    def safe_decrypt(field):
+        return encryptor.decrypt(field) if field else None
+
     return {
         'user_id': patient_user.id,
-        'username': encryptor.decrypt(patient_user.username),
-        'email': encryptor.decrypt(patient_user.email),
-        'full_name': encryptor.decrypt(profile.full_name),
-        'date_of_birth': encryptor.decrypt(profile.date_of_birth),
-        'gender': encryptor.decrypt(profile.gender),
-        'phone_number': encryptor.decrypt(profile.phone_number),
-        'address': encryptor.decrypt(profile.address),
-        'presenting_problem': encryptor.decrypt(profile.presenting_problem),
-        'billing_type': profile.billing_type,
-        'age': profile.age,
+        'username': safe_decrypt(patient_user.username),
+        'email': safe_decrypt(patient_user.email),
+        'first_name': safe_decrypt(profile.first_name),
+        'last_name': safe_decrypt(profile.last_name),
+        'date_of_birth': safe_decrypt(profile.date_of_birth),
+        'gender': safe_decrypt(profile.gender),
+        'phone_number': safe_decrypt(profile.phone_number),
+        'address': safe_decrypt(profile.address),
+        'city': safe_decrypt(profile.city),
+        'state': safe_decrypt(profile.state),
+        'zip_code': safe_decrypt(profile.zip_code),
+        'emergency_contact_name': safe_decrypt(profile.emergency_contact_name),
+        'emergency_contact_phone': safe_decrypt(profile.emergency_contact_phone),
+        'insurance_provider': safe_decrypt(profile.insurance_provider),
+        'policy_number': safe_decrypt(profile.policy_number),
+        'group_number': safe_decrypt(profile.group_number),
+        'policy_holder_name': safe_decrypt(profile.policy_holder_name),
+        'policy_holder_date_of_birth': safe_decrypt(profile.policy_holder_date_of_birth),
+        'relationship_to_patient': safe_decrypt(profile.relationship_to_patient),
+        'primary_care_physician': safe_decrypt(profile.primary_care_physician),
+        'allergies': safe_decrypt(profile.allergies),
+        'current_medications': safe_decrypt(profile.current_medications),
+        'previous_surgeries': safe_decrypt(profile.previous_surgeries),
+        'family_medical_history': safe_decrypt(profile.family_medical_history),
+        'smoking_status': safe_decrypt(profile.smoking_status),
+        'alcohol_consumption': safe_decrypt(profile.alcohol_consumption),
+        'exercise_frequency': safe_decrypt(profile.exercise_frequency),
+        'chief_complaint': safe_decrypt(profile.chief_complaint),
+        'symptoms_duration': safe_decrypt(profile.symptoms_duration),
+        'previous_treatment_for_condition': safe_decrypt(profile.previous_treatment_for_condition),
+        'additional_notes': safe_decrypt(profile.additional_notes),
+        'current_pain_level': profile.current_pain_level,
         'is_active': patient_user.is_active
     }
 
 def register_patient():
-    """Creates a new patient as a user and links them to the current doctor."""
+    """Creates a new patient with a comprehensive profile and links to the current doctor."""
     doctor_id = get_jwt_identity()
     doctor = User.query.get(doctor_id)
     data = request.get_json()
 
-    required = ['username', 'email', 'full_name', 'date_of_birth', 'age']
+    required = ['username', 'email', 'first_name', 'last_name', 'date_of_birth']
     if any(field not in data for field in required):
-        return jsonify({'error': 'Missing required fields'}), 400
+        return jsonify({'error': 'Missing required fields: username, email, first_name, last_name, date_of_birth'}), 400
 
     username, email = data['username'], data['email']
     if User.query.filter_by(username_hash=User.create_hash(username)).first() or \
@@ -78,17 +95,43 @@ def register_patient():
         must_change_password=True
     )
     patient_user.set_password(temp_password)
+    
+    # Helper to safely encrypt a field from data if it exists
+    def safe_encrypt(field_name):
+        return encryptor.encrypt(data[field_name]) if data.get(field_name) else None
 
     patient_profile = PatientProfile(
         user=patient_user,
-        full_name=encryptor.encrypt(data['full_name']),
-        date_of_birth=encryptor.encrypt(data['date_of_birth']),
-        gender=encryptor.encrypt(data.get('gender')),
-        phone_number=encryptor.encrypt(data.get('phone_number')),
-        address=encryptor.encrypt(data.get('address')),
-        presenting_problem=encryptor.encrypt(data.get('presenting_problem')),
-        billing_type=data.get('billing_type'),
-        age=data.get('age')
+        first_name=safe_encrypt('first_name'),
+        last_name=safe_encrypt('last_name'),
+        date_of_birth=safe_encrypt('date_of_birth'),
+        gender=safe_encrypt('gender'),
+        phone_number=safe_encrypt('phone_number'),
+        address=safe_encrypt('address'),
+        city=safe_encrypt('city'),
+        state=safe_encrypt('state'),
+        zip_code=safe_encrypt('zip_code'),
+        emergency_contact_name=safe_encrypt('emergency_contact_name'),
+        emergency_contact_phone=safe_encrypt('emergency_contact_phone'),
+        insurance_provider=safe_encrypt('insurance_provider'),
+        policy_number=safe_encrypt('policy_number'),
+        group_number=safe_encrypt('group_number'),
+        policy_holder_name=safe_encrypt('policy_holder_name'),
+        policy_holder_date_of_birth=safe_encrypt('policy_holder_date_of_birth'),
+        relationship_to_patient=safe_encrypt('relationship_to_patient'),
+        primary_care_physician=safe_encrypt('primary_care_physician'),
+        allergies=safe_encrypt('allergies'),
+        current_medications=safe_encrypt('current_medications'),
+        previous_surgeries=safe_encrypt('previous_surgeries'),
+        family_medical_history=safe_encrypt('family_medical_history'),
+        smoking_status=safe_encrypt('smoking_status'),
+        alcohol_consumption=safe_encrypt('alcohol_consumption'),
+        exercise_frequency=safe_encrypt('exercise_frequency'),
+        chief_complaint=safe_encrypt('chief_complaint'),
+        symptoms_duration=safe_encrypt('symptoms_duration'),
+        previous_treatment_for_condition=safe_encrypt('previous_treatment_for_condition'),
+        additional_notes=safe_encrypt('additional_notes'),
+        current_pain_level=data.get('current_pain_level')
     )
     
     doctor.assigned_patients.append(patient_user)
@@ -101,6 +144,52 @@ def register_patient():
             'message': 'Patient registered successfully. Credentials sent to their email.',
             'patient': _decrypt_patient_data(patient_user)
         }), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'An unexpected error occurred: {str(e)}'}), 500
+
+def update_patient(patient_id):
+    """Updates an assigned patient's comprehensive profile data."""
+    doctor_id = get_jwt_identity()
+    doctor = User.query.get(doctor_id)
+    patient = doctor.assigned_patients.filter_by(id=patient_id).first()
+
+    if not patient:
+        return jsonify({'error': 'Patient not found or not assigned to you.'}), 404
+
+    data = request.get_json()
+    profile = patient.patient_profile
+    
+    # List of all profile fields to update
+    profile_fields = [
+        'first_name', 'last_name', 'date_of_birth', 'gender', 'phone_number', 
+        'address', 'city', 'state', 'zip_code', 'emergency_contact_name', 
+        'emergency_contact_phone', 'insurance_provider', 'policy_number', 
+        'group_number', 'policy_holder_name', 'policy_holder_date_of_birth', 
+        'relationship_to_patient', 'primary_care_physician', 'allergies', 
+        'current_medications', 'previous_surgeries', 'family_medical_history', 
+        'smoking_status', 'alcohol_consumption', 'exercise_frequency', 
+        'chief_complaint', 'symptoms_duration', 'previous_treatment_for_condition', 
+        'additional_notes'
+    ]
+
+    for field in profile_fields:
+        if field in data:
+            setattr(profile, field, encryptor.encrypt(data[field]))
+    
+    if 'current_pain_level' in data:
+        profile.current_pain_level = data['current_pain_level']
+
+    if 'email' in data and encryptor.decrypt(patient.email) != data['email']:
+        patient.email = encryptor.encrypt(data['email'])
+        patient.email_hash = User.create_hash(data['email'])
+
+    try:
+        db.session.commit()
+        return jsonify({'message': 'Patient updated successfully', 'patient': _decrypt_patient_data(patient)}), 200
+    except IntegrityError:
+        db.session.rollback()
+        return jsonify({'error': 'Update failed, email may already be in use.'}), 409
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': f'An unexpected error occurred: {str(e)}'}), 500
@@ -126,40 +215,25 @@ def get_patient_by_id(patient_id):
         
     return jsonify({'patient': _decrypt_patient_data(patient)}), 200
 
-def update_patient(patient_id):
-    """Updates an assigned patient's user and profile data."""
+def get_patient_by_username(username):
+    """Retrieves a single assigned patient by their username."""
     doctor_id = get_jwt_identity()
     doctor = User.query.get(doctor_id)
-    patient = doctor.assigned_patients.filter_by(id=patient_id).first()
+    
+    # Find the user by their username hash for security
+    username_hash = User.create_hash(username)
+    patient = User.query.filter_by(username_hash=username_hash).first()
 
     if not patient:
-        return jsonify({'error': 'Patient not found or not assigned to you.'}), 404
+        return jsonify({'error': 'Patient with that username not found.'}), 404
 
-    data = request.get_json()
-    profile = patient.patient_profile
+    # Check if the found user is actually assigned to this doctor
+    is_assigned = doctor.assigned_patients.filter_by(id=patient.id).first()
     
-    if 'full_name' in data: profile.full_name = encryptor.encrypt(data['full_name'])
-    if 'date_of_birth' in data: profile.date_of_birth = encryptor.encrypt(data['date_of_birth'])
-    if 'gender' in data: profile.gender = encryptor.encrypt(data['gender'])
-    if 'phone_number' in data: profile.phone_number = encryptor.encrypt(data['phone_number'])
-    if 'address' in data: profile.address = encryptor.encrypt(data['address'])
-    if 'presenting_problem' in data: profile.presenting_problem = encryptor.encrypt(data['presenting_problem'])
-    if 'billing_type' in data: profile.billing_type = data['billing_type']
-    if 'age' in data: profile.age = data['age']
-
-    if 'email' in data and encryptor.decrypt(patient.email) != data['email']:
-        patient.email = encryptor.encrypt(data['email'])
-        patient.email_hash = User.create_hash(data['email'])
-
-    try:
-        db.session.commit()
-        return jsonify({'message': 'Patient updated successfully', 'patient': _decrypt_patient_data(patient)}), 200
-    except IntegrityError:
-        db.session.rollback()
-        return jsonify({'error': 'Update failed, email may already be in use.'}), 409
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({'error': f'An unexpected error occurred: {str(e)}'}), 500
+    if not is_assigned:
+        return jsonify({'error': 'Patient not found or not assigned to you.'}), 404
+        
+    return jsonify({'patient': _decrypt_patient_data(patient)}), 200
 
 def disassociate_patient(patient_id):
     """Removes the link between a doctor and a patient, without deleting the patient."""
