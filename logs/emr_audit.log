@@ -14,3 +14,16 @@
 
 (Background on this error at: https://sqlalche.me/e/14/e3q8)
 2025-08-19 12:24:09,910 - HIPAA_AUDIT - ERROR - Internal server error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2025-08-29 16:54:48,073 INFO: EMR startup [in E:\woltrio\DejiEMRAPI\app\__init__.py:45]
+2025-08-29 16:54:49,496 INFO: EMR startup [in E:\woltrio\DejiEMRAPI\app\__init__.py:45]
+2025-08-29 16:55:54,747 INFO: EMR startup [in E:\woltrio\DejiEMRAPI\app\__init__.py:45]
+2025-08-29 16:55:56,165 INFO: EMR startup [in E:\woltrio\DejiEMRAPI\app\__init__.py:45]
+2025-08-29 17:58:32,777 INFO: EMR startup [in E:\woltrio\DejiEMRAPI\app\__init__.py:45]
+2025-08-29 17:58:34,693 INFO: EMR startup [in E:\woltrio\DejiEMRAPI\app\__init__.py:45]
+2025-08-29 18:03:03,283 INFO: Action='USER_LOGIN', Resource='authentication', UserID='None', Success='False', Details='Request successful. Status: 401'
+2025-08-29 18:03:34,537 INFO: Action='USER_LOGIN', Resource='authentication', UserID='None', Success='False', Details='Request successful. Status: 401'
+2025-08-29 18:03:47,381 INFO: Action='USER_LOGIN', Resource='authentication', UserID='None', Success='False', Details='Request successful. Status: 401'
+2025-08-29 18:04:18,393 INFO: Action='USER_REGISTRATION', Resource='users', UserID='None', Success='False', Details='Request successful. Status: 400'
+2025-08-29 18:24:46,065 INFO: Action='USER_REGISTRATION', Resource='users', UserID='None', Success='False', Details='Request successful. Status: 400'
+2025-08-29 18:25:42,436 ERROR: Action='USER_REGISTRATION', Resource='users', UserID='None', Success='False', Details='An error occurred: Encryptor has not been initialized with an app context.'
+2025-08-29 18:26:05,916 ERROR: Action='USER_REGISTRATION', Resource='users', UserID='None', Success='False', Details='An error occurred: Encryptor has not been initialized with an app context.'
