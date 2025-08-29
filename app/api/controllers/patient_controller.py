@@ -100,7 +100,7 @@ def register_patient():
     def safe_encrypt(field_name):
         return encryptor.encrypt(data[field_name]) if data.get(field_name) else None
 
-    patient_profile = PatientProfile(
+    patient_profile = PatientProfile( 
         user=patient_user,
         first_name=safe_encrypt('first_name'),
         last_name=safe_encrypt('last_name'),

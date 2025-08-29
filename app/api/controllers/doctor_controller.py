@@ -6,6 +6,8 @@ from app.extensions import db
 from app.models.user_models import User, Role, DoctorProfile
 from app.utils.encryption_util import encryptor
 from app.utils.email_util import send_password_email
+from flask_jwt_extended import jwt_required, get_jwt_identity
+
 
 def _generate_random_password(length=12):
     """Generates a secure, random 12-character password with required complexity."""
@@ -101,3 +103,39 @@ def get_all_doctors():
             'is_active': user.is_active,
         })
     return jsonify({'doctors': doctor_list}), 200
+
+
+def get_doctor_profile():
+    """
+    Gets the profile details for the currently logged-in doctor.
+    """
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+
+    if not user or user.role.name != 'doctor':
+        return jsonify({'error': 'Doctor not found or not authorized'}), 404
+
+    profile = user.doctor_profile
+    if not profile:
+        return jsonify({'error': 'Doctor profile not found'}), 404
+
+    # Decrypt and serialize the profile data
+    profile_data = {
+        'first_name': encryptor.decrypt(profile.first_name),
+        'last_name': encryptor.decrypt(profile.last_name),
+        'medical_license_number': encryptor.decrypt(profile.medical_license_number),
+        'qualifications': encryptor.decrypt(profile.qualifications),
+        'npi_number': encryptor.decrypt(profile.npi_number) if profile.npi_number else None,
+        'dea_number': encryptor.decrypt(profile.dea_number) if profile.dea_number else None,
+        'biography': encryptor.decrypt(profile.biography) if profile.biography else None,
+        'languages_spoken': encryptor.decrypt(profile.languages_spoken) if profile.languages_spoken else None,
+        'department': profile.department,
+        'specialization': profile.specialization,
+        'years_of_experience': profile.years_of_experience,
+        'available_for_telehealth': profile.available_for_telehealth,
+        'user_id': user.id,
+        'email': encryptor.decrypt(user.email),
+        'is_active': user.is_active,
+    }
+
+    return jsonify(profile_data), 200

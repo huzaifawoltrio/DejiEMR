@@ -172,7 +172,12 @@ def update_appointment(appointment_id):
 
 def delete_appointment(appointment_id):
     """Deletes an appointment."""
-    user_id = get_jwt_identity()
+    try:
+        # FIX: Convert JWT identity to an integer for safe comparison
+        user_id = int(get_jwt_identity())
+    except (ValueError, TypeError):
+        return jsonify({"error": "Invalid user identity in token"}), 401
+
     appointment = Appointment.query.get(appointment_id)
 
     if not appointment or (appointment.doctor_id != user_id and appointment.patient_id != user_id):

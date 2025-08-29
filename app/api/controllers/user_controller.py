@@ -19,13 +19,10 @@ def _decrypt_user_data(user):
             'specialization': user.doctor_profile.specialization, # Assuming specialization is not encrypted
         }
     elif user.role.name == 'patient' and user.patient_profile:
-        # Patient profile has an encrypted 'full_name' field
-        decrypted_full_name = encryptor.decrypt(user.patient_profile.full_name) or ""
-        
-        # Split full_name into first_name and last_name for a consistent API response
-        name_parts = decrypted_full_name.split(" ", 1)
-        first_name = name_parts[0]
-        last_name = name_parts[1] if len(name_parts) > 1 else ""
+        # CORRECTED SECTION:
+        # Decrypt first_name and last_name separately instead of 'full_name'
+        first_name = encryptor.decrypt(user.patient_profile.first_name) or ""
+        last_name = encryptor.decrypt(user.patient_profile.last_name) or ""
 
         profile_data = {
             'first_name': first_name,
@@ -49,7 +46,6 @@ def _decrypt_user_data(user):
         'created_at': user.created_at.isoformat() if user.created_at else None,
         **profile_data
     }
-
 
 def get_current_user_details():
     """

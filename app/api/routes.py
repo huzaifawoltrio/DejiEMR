@@ -1,3 +1,5 @@
+# huzaifawoltrio/dejiemr/DejiEMR-new-patient-profile/app/api/routes.py
+
 from flask_jwt_extended import jwt_required
 from . import api_bp
 from app.extensions import limiter
@@ -61,6 +63,12 @@ def register_doctor():
 @require_permission('doctors', 'read')
 def get_doctors():
     return doctor_controller.get_all_doctors()
+
+@api_bp.route('/doctors/profile', methods=['GET'])
+@jwt_required()
+@audit_log("VIEW_DOCTOR_PROFILE", "doctors")
+def get_doctor_profile():
+    return doctor_controller.get_doctor_profile()
 
 # --- Patient Management Endpoints ---
 @api_bp.route('/patients/register', methods=['POST'])
