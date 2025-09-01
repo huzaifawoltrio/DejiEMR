@@ -36,6 +36,9 @@ def init_db_command():
         # User & System Permissions
         {'name': 'admin_users', 'resource': 'users', 'action': 'admin'},
         {'name': 'view_audit', 'resource': 'audit', 'action': 'read'},
+        # NEW: Chat permissions
+        {'name': 'read_chat', 'resource': 'chat', 'action': 'read'},
+        {'name': 'write_chat', 'resource': 'chat', 'action': 'write'},
     ]
     for perm_data in permissions_data:
         if not Permission.query.filter_by(name=perm_data['name']).first():

@@ -1,6 +1,6 @@
 # /app/__init__.py
 from flask import Flask
-from app.extensions import db, bcrypt, migrate, jwt, limiter, cors
+from app.extensions import db, bcrypt, migrate, jwt, limiter, cors, socketio
 from app.utils.encryption_util import encryptor
 from app.utils.cloudinary_util import cloudinary_manager
 from app.utils.error_handlers import register_error_handlers
@@ -18,6 +18,8 @@ def create_app():
     jwt.init_app(app)
     limiter.init_app(app)
     cors.init_app(app, origins=app.config['ALLOWED_ORIGINS'])
+    socketio.init_app(app, cors_allowed_origins="*", async_mode='eventlet')
+
     
     # Initialize custom utilities
     encryptor.init_app(app)
@@ -29,8 +31,11 @@ def create_app():
     # Register blueprints
     from app.api import api_bp
     app.register_blueprint(api_bp, url_prefix='/api')
+
+    from app.socket_handlers import chat_handler
+
     
-    # Register error handlers and commands
+    # Register error handlers and commands  
     register_error_handlers(app)
     register_commands(app)
     

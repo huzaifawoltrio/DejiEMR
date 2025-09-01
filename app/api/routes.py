@@ -191,3 +191,40 @@ def test_auth():
 @audit_log("VIEW_ALL_USERS", "users")
 def get_all_users():
     return user_controller.get_all_users_list()
+
+
+# --- Chat Endpoints ---
+@api_bp.route('/chat/history', methods=['GET'])
+@jwt_required()
+@audit_log("VIEW_CHAT_HISTORY", "chat")
+def get_chat_history_route():
+    from .controllers import chat_controller
+    return chat_controller.get_chat_history()
+
+@api_bp.route('/chat/conversations', methods=['GET'])
+@jwt_required()
+@audit_log("VIEW_CONVERSATIONS", "chat")
+def get_conversations_route():
+    from .controllers import chat_controller
+    return chat_controller.get_conversations()
+
+@api_bp.route('/chat/users', methods=['GET'])
+@jwt_required()
+@audit_log("VIEW_CHATEABLE_USERS", "chat")
+def get_chateable_users_route():
+    from .controllers import chat_controller
+    return chat_controller.get_chateable_users()
+
+@api_bp.route('/chat/messages/<int:message_id>', methods=['DELETE'])
+@jwt_required()
+@audit_log("DELETE_CHAT_MESSAGE", "chat")
+def delete_message_route(message_id):
+    from .controllers import chat_controller
+    return chat_controller.delete_message(message_id)
+
+@api_bp.route('/chat/mark-read', methods=['POST'])
+@jwt_required()
+@audit_log("MARK_MESSAGES_READ", "chat")
+def mark_messages_read_route():
+    from .controllers import chat_controller
+    return chat_controller.mark_messages_read()
