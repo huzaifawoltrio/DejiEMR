@@ -14,4 +14,6 @@ migrate = Migrate()
 jwt = JWTManager()
 limiter = Limiter(key_func=get_remote_address)
 cors = CORS()
-socketio = SocketIO(cors_allowed_origins="*", async_mode='eventlet')
+# Instantiate SocketIO without specifying async_mode
+# This prevents issues with Flask CLI commands.
+socketio = SocketIO(cors_allowed_origins="*")

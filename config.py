@@ -3,6 +3,7 @@ import os
 import secrets
 from datetime import timedelta
 import logging
+from logging.handlers import RotatingFileHandler
 
 class Config:
     """HIPAA-compliant configuration settings"""
@@ -44,10 +45,96 @@ class Config:
 
     @staticmethod
     def init_app(app):
-        # Configure HIPAA-compliant logging
-        logging.basicConfig(
-            filename='emr_audit.log',
-            level=logging.INFO,
-            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-        )
-        app.audit_logger = logging.getLogger('HIPAA_AUDIT')
+        """Initialize application-specific configuration"""
+        # Create logs directory if it doesn't exist
+        if not os.path.exists('logs'):
+            os.mkdir('logs')
+        
+        # Configure main application logging
+        if not app.debug and not app.testing:
+            # Production logging setup with rotation
+            file_handler = RotatingFileHandler('logs/app.log', maxBytes=10240000, backupCount=10)
+            file_handler.setFormatter(logging.Formatter(
+                '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
+            ))
+            file_handler.setLevel(logging.INFO)
+            app.logger.addHandler(file_handler)
+            app.logger.setLevel(logging.INFO)
+            app.logger.info('EMR application startup')
+        
+        # Set up HIPAA audit logger
+        audit_logger = logging.getLogger('HIPAA_AUDIT')
+        if not audit_logger.handlers:
+            # Use rotating file handler for audit logs
+            audit_handler = RotatingFileHandler('logs/hipaa_audit.log', maxBytes=10240000, backupCount=20)
+            audit_handler.setFormatter(logging.Formatter(
+                '%(asctime)s - %(message)s'
+            ))
+            audit_logger.addHandler(audit_handler)
+            audit_logger.setLevel(logging.INFO)
+            audit_logger.propagate = False  # Prevent duplicate logs
+        
+        app.audit_logger = audit_logger
+
+class DevelopmentConfig(Config):
+    """Development configuration"""
+    DEBUG = True
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or 'postgresql://postgres:postgres@localhost:5432/deji-new-emr-dev'
+    
+    # Override security settings for development
+    SESSION_COOKIE_SECURE = False
+    
+    @staticmethod
+    def init_app(app):
+        Config.init_app(app)
+        
+        # Development-specific logging (less verbose)
+        if not app.logger.handlers:
+            console_handler = logging.StreamHandler()
+            console_handler.setFormatter(logging.Formatter(
+                '%(asctime)s %(levelname)s: %(message)s'
+            ))
+            app.logger.addHandler(console_handler)
+            app.logger.setLevel(logging.DEBUG)
+
+class TestingConfig(Config):
+    """Testing configuration"""
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
+    WTF_CSRF_ENABLED = False
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(seconds=1)  # Short expiry for testing
+    
+    # Disable security features for testing
+    SESSION_COOKIE_SECURE = False
+    
+    @staticmethod
+    def init_app(app):
+        Config.init_app(app)
+
+class ProductionConfig(Config):
+    """Production configuration"""
+    DEBUG = False
+    
+    @classmethod
+    def init_app(cls, app):
+        Config.init_app(app)
+        
+        # Production-specific initialization
+        app.logger.info('EMR Production application startup')
+        
+        # Additional production security validation
+        if not os.environ.get('EMR_ENCRYPTION_KEY'):
+            app.logger.error('EMR_ENCRYPTION_KEY not set in production!')
+            raise ValueError('EMR_ENCRYPTION_KEY must be set in production')
+        
+        if not os.environ.get('JWT_SECRET_KEY'):
+            app.logger.error('JWT_SECRET_KEY not set in production!')
+            raise ValueError('JWT_SECRET_KEY must be set in production')
+
+# Configuration dictionary
+config = {
+    'development': DevelopmentConfig,
+    'testing': TestingConfig,
+    'production': ProductionConfig,
+    'default': DevelopmentConfig
+}

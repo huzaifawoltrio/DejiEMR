@@ -18,7 +18,9 @@ def create_app():
     jwt.init_app(app)
     limiter.init_app(app)
     cors.init_app(app, origins=app.config['ALLOWED_ORIGINS'])
-    socketio.init_app(app, cors_allowed_origins="*", async_mode='eventlet')
+    # Initialize SocketIO without specifying async_mode here
+    # It will be handled by the runner in run.py
+    socketio.init_app(app, cors_allowed_origins="*")
 
     
     # Initialize custom utilities
