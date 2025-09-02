@@ -5,6 +5,8 @@ from . import api_bp
 from app.extensions import limiter
 from app.utils.decorators import audit_log, require_permission
 from .controllers import auth_controller, user_controller, patient_controller, doctor_controller, appointment_controller
+from app.api.controllers import google_calendar_controller
+
 
 
 # --- Authentication Endpoints ---
@@ -243,3 +245,20 @@ def test_auth():
 @audit_log("VIEW_ALL_USERS", "users")
 def get_all_users():
     return user_controller.get_all_users_list()
+
+@app.route('/authorize')
+def authorize():
+    return google_calendar_controller.authorize()
+
+@app.route('/oauth2callback')
+def oauth2callback():
+    return google_calendar_controller.oauth2callback()
+
+@app.route('/create_event')
+def create_event():
+    return google_calendar_controller.create_google_meet_event()
+
+# This new route creates a standalone meeting
+@api_bp.route('/meetings', methods=['POST'])
+def create_meeting():
+    return google_calendar_controller.create_google_meet_event()
