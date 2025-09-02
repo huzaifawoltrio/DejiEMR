@@ -38,14 +38,12 @@ def change_password():
     return auth_controller.change_user_password()
 
 
-
 # --- User Profile Endpoint ---
 @api_bp.route('/users/me', methods=['GET'])
 @jwt_required()
 @audit_log("VIEW_OWN_PROFILE", "users")
 def get_current_user_route():
     return user_controller.get_current_user_details()
-
 
 
 # --- Doctor Endpoints ---
@@ -70,6 +68,7 @@ def get_doctors():
 def get_doctor_profile():
     return doctor_controller.get_doctor_profile()
 
+
 # --- Patient Management Endpoints ---
 @api_bp.route('/patients/register', methods=['POST'])
 @jwt_required()
@@ -84,6 +83,13 @@ def register_patient_route():
 @audit_log("VIEW_ALL_PATIENTS", "patients")
 def get_patients_route():
     return patient_controller.get_all_patients_for_doctor()
+
+@api_bp.route('/patients/detailed', methods=['GET'])
+@jwt_required()
+@require_permission('patients', 'read')
+@audit_log("VIEW_ALL_PATIENTS_DETAILED", "patients")
+def get_patients_detailed_route():
+    return patient_controller.get_all_patients_for_doctor_detailed()
 
 @api_bp.route('/patients/search/<string:username>', methods=['GET'])
 @jwt_required()
@@ -112,6 +118,7 @@ def update_patient_route(patient_id):
 @audit_log("DISASSOCIATE_PATIENT", "patients")
 def disassociate_patient_route(patient_id):
     return patient_controller.disassociate_patient(patient_id)
+
 
 # --- Appointment CRUD Endpoints ---
 @api_bp.route('/appointments', methods=['POST'])
@@ -149,6 +156,7 @@ def update_appointment_route(appointment_id):
 def delete_appointment_route(appointment_id):
     return appointment_controller.delete_appointment(appointment_id)
 
+
 # --- Profile Picture Endpoints ---
 @api_bp.route('/profile/picture', methods=['POST'])
 @jwt_required()
@@ -178,19 +186,6 @@ def delete_profile_picture_route():
 def get_user_profile_picture_route(user_id):
     from .controllers import profile_controller
     return profile_controller.get_user_profile_picture(user_id)
-
-# --- Admin & Test Endpoints ---
-@api_bp.route('/test-auth', methods=['GET'])
-@jwt_required()
-def test_auth():
-    return user_controller.test_user_auth()
-
-@api_bp.route('/admin/users', methods=['GET'])
-@jwt_required()
-@require_permission('users', 'admin')
-@audit_log("VIEW_ALL_USERS", "users")
-def get_all_users():
-    return user_controller.get_all_users_list()
 
 
 # --- Chat Endpoints ---
@@ -228,3 +223,17 @@ def delete_message_route(message_id):
 def mark_messages_read_route():
     from .controllers import chat_controller
     return chat_controller.mark_messages_read()
+
+
+# --- Admin & Test Endpoints ---
+@api_bp.route('/test-auth', methods=['GET'])
+@jwt_required()
+def test_auth():
+    return user_controller.test_user_auth()
+
+@api_bp.route('/admin/users', methods=['GET'])
+@jwt_required()
+@require_permission('users', 'admin')
+@audit_log("VIEW_ALL_USERS", "users")
+def get_all_users():
+    return user_controller.get_all_users_list()

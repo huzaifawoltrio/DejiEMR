@@ -28,10 +28,24 @@ def _decrypt_patient_data(patient_user):
     def safe_decrypt(field):
         return encryptor.decrypt(field) if field else None
 
+    # Decrypt profile picture URL from user table
+    decrypted_profile_picture_url = None
+    if patient_user.profile_picture_url:
+        try:
+            decrypted_profile_picture_url = encryptor.decrypt(patient_user.profile_picture_url)
+        except Exception:
+            decrypted_profile_picture_url = None
+
     return {
         'user_id': patient_user.id,
         'username': safe_decrypt(patient_user.username),
         'email': safe_decrypt(patient_user.email),
+        'profile_picture_url': decrypted_profile_picture_url,  # Added from user table
+        'is_active': patient_user.is_active,
+        'last_login': patient_user.last_login.isoformat() if patient_user.last_login else None,
+        'created_at': patient_user.created_at.isoformat() if patient_user.created_at else None,
+        'updated_at': patient_user.updated_at.isoformat() if patient_user.updated_at else None,
+        # Patient profile data
         'first_name': safe_decrypt(profile.first_name),
         'last_name': safe_decrypt(profile.last_name),
         'date_of_birth': safe_decrypt(profile.date_of_birth),
@@ -61,9 +75,47 @@ def _decrypt_patient_data(patient_user):
         'symptoms_duration': safe_decrypt(profile.symptoms_duration),
         'previous_treatment_for_condition': safe_decrypt(profile.previous_treatment_for_condition),
         'additional_notes': safe_decrypt(profile.additional_notes),
-        'current_pain_level': profile.current_pain_level,
-        'is_active': patient_user.is_active
+        'current_pain_level': profile.current_pain_level
     }
+
+def _decrypt_patient_basic_data(patient_user):
+    """Helper to decrypt basic patient data for list views (lighter version)."""
+    if not patient_user:
+        return None
+    
+    def safe_decrypt(field):
+        return encryptor.decrypt(field) if field else None
+
+    # Decrypt profile picture URL from user table
+    decrypted_profile_picture_url = None
+    if patient_user.profile_picture_url:
+        try:
+            decrypted_profile_picture_url = encryptor.decrypt(patient_user.profile_picture_url)
+        except Exception:
+            decrypted_profile_picture_url = None
+
+    basic_data = {
+        'user_id': patient_user.id,
+        'username': safe_decrypt(patient_user.username),
+        'email': safe_decrypt(patient_user.email),
+        'profile_picture_url': decrypted_profile_picture_url,
+        'is_active': patient_user.is_active,
+        'last_login': patient_user.last_login.isoformat() if patient_user.last_login else None,
+        'created_at': patient_user.created_at.isoformat() if patient_user.created_at else None,
+    }
+
+    # Add basic profile info if available
+    if patient_user.patient_profile:
+        profile = patient_user.patient_profile
+        basic_data.update({
+            'first_name': safe_decrypt(profile.first_name),
+            'last_name': safe_decrypt(profile.last_name),
+            'date_of_birth': safe_decrypt(profile.date_of_birth),
+            'phone_number': safe_decrypt(profile.phone_number),
+            'current_pain_level': profile.current_pain_level
+        })
+
+    return basic_data
 
 def register_patient():
     """Creates a new patient with a comprehensive profile and links to the current doctor."""
@@ -195,12 +247,35 @@ def update_patient(patient_id):
         return jsonify({'error': f'An unexpected error occurred: {str(e)}'}), 500
 
 def get_all_patients_for_doctor():
-    """Retrieves all patients assigned to the logged-in doctor."""
+    """Retrieves all patients assigned to the logged-in doctor with full user and profile data."""
     doctor_id = get_jwt_identity()
     doctor = User.query.get(doctor_id)
-    patients = doctor.assigned_patients.all()
     
-    decrypted_patients = [_decrypt_patient_data(p) for p in patients]
+    # Get patients with eager loading to avoid N+1 queries
+    patients = doctor.assigned_patients.options(
+        db.joinedload(User.patient_profile),
+        db.joinedload(User.role)
+    ).all()
+    
+    # Use the basic data helper for list view (includes profile picture)
+    decrypted_patients = [_decrypt_patient_basic_data(p) for p in patients if p.patient_profile]
+    
+    return jsonify({'patients': decrypted_patients}), 200
+
+def get_all_patients_for_doctor_detailed():
+    """Retrieves all patients assigned to the logged-in doctor with complete profile data."""
+    doctor_id = get_jwt_identity()
+    doctor = User.query.get(doctor_id)
+    
+    # Get patients with eager loading
+    patients = doctor.assigned_patients.options(
+        db.joinedload(User.patient_profile),
+        db.joinedload(User.role)
+    ).all()
+    
+    # Use the full data helper for detailed view
+    decrypted_patients = [_decrypt_patient_data(p) for p in patients if p.patient_profile]
+    
     return jsonify({'patients': decrypted_patients}), 200
 
 def get_patient_by_id(patient_id):
