@@ -91,6 +91,12 @@ def get_patients_route():
 def get_patients_detailed_route():
     return patient_controller.get_all_patients_for_doctor_detailed()
 
+@api_bp.route('/patients/my-doctors', methods=['GET'])
+@jwt_required()
+@audit_log("VIEW_ASSIGNED_DOCTORS", "patients")
+def get_my_doctors_route():
+    return doctor_controller.get_my_doctors()
+
 @api_bp.route('/patients/search/<string:username>', methods=['GET'])
 @jwt_required()
 @require_permission('patients', 'read')

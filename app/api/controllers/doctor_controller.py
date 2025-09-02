@@ -28,6 +28,46 @@ def _generate_random_password(length=12):
                 and any(c in string.punctuation for c in password)):
             return password
 
+def _decrypt_doctor_data(doctor_user):
+    """Helper to decrypt a doctor's user and profile data for responses."""
+    if not doctor_user or not doctor_user.doctor_profile:
+        return None
+    profile = doctor_user.doctor_profile
+
+    def safe_decrypt(field):
+        return encryptor.decrypt(field) if field else None
+
+    decrypted_profile_picture_url = None
+    if doctor_user.profile_picture_url:
+        try:
+            decrypted_profile_picture_url = encryptor.decrypt(doctor_user.profile_picture_url)
+        except Exception:
+            decrypted_profile_picture_url = None
+
+    return {
+        'user_id': doctor_user.id,
+        'username': safe_decrypt(doctor_user.username),
+        'email': safe_decrypt(doctor_user.email),
+        'profile_picture_url': decrypted_profile_picture_url,
+        'is_active': doctor_user.is_active,
+        'last_login': doctor_user.last_login.isoformat() if doctor_user.last_login else None,
+        'created_at': doctor_user.created_at.isoformat() if doctor_user.created_at else None,
+        'updated_at': doctor_user.updated_at.isoformat() if doctor_user.updated_at else None,
+        'first_name': profile.first_name,
+        'last_name': profile.last_name,
+        'specialization': profile.specialization,
+        'medical_license_number': profile.medical_license_number,
+        'qualifications': profile.qualifications,
+        'npi_number': profile.npi_number,
+        'dea_number': profile.dea_number,
+        'biography': profile.biography,
+        'languages_spoken': profile.languages_spoken,
+        'department': profile.department,
+        'years_of_experience': profile.years_of_experience,
+        'available_for_telehealth': profile.available_for_telehealth,
+    }
+
+
 def register_doctor():
     data = request.get_json()
     
@@ -139,3 +179,23 @@ def get_doctor_profile():
     }
 
     return jsonify(profile_data), 200
+
+def get_my_doctors():
+    """Retrieves all doctors assigned to the logged-in patient using the ORM relationship."""
+    patient_id = get_jwt_identity()
+    patient = User.query.get(patient_id)
+
+    if not patient or patient.role.name != 'patient':
+        return jsonify({'error': 'Patient not found or invalid role.'}), 404
+
+    # Use the 'assigned_doctors' relationship directly
+    doctors = patient.assigned_doctors.options(
+        db.joinedload(User.doctor_profile)
+    ).all()
+
+    if not doctors:
+        return jsonify({'doctors': []}), 200
+
+    decrypted_doctors = [_decrypt_doctor_data(d) for d in doctors if d.doctor_profile]
+
+    return jsonify({'doctors': decrypted_doctors}), 200
