@@ -1,19 +1,34 @@
 # /run.py
-# IMPORTANT: If using eventlet, monkey patch MUST be the very first thing
-import eventlet
-eventlet.monkey_patch()
+"""
+Fixed version that handles eventlet monkey patching properly
+and avoids conflicts with Flask CLI commands.
+"""
+import os
+import sys
 
-# Load environment variables from .env file AFTER monkey patching
+# Only apply eventlet monkey patching when running the server, not CLI commands
+if 'flask' not in sys.argv[0] and 'db' not in sys.argv:
+    import eventlet
+    eventlet.monkey_patch()
+
+# Load environment variables from .env file
 from dotenv import load_dotenv
 load_dotenv()
 
 # Now, import the app factory
 from app import create_app
 
-# Create the app instance (it will now have the correct config)
+# Create the app instance
 app = create_app()
 
 if __name__ == '__main__':
-    # Use eventlet's wsgi server instead of Flask's development server
-    import eventlet.wsgi
-    eventlet.wsgi.server(eventlet.listen(('127.0.0.1', 5000)), app)
+    # Check if we're running with eventlet
+    if 'eventlet' in sys.modules:
+        # Use eventlet's wsgi server for production-like async support
+        import eventlet.wsgi
+        print("Starting server with eventlet...")
+        eventlet.wsgi.server(eventlet.listen(('127.0.0.1', 5000)), app)
+    else:
+        # Use Flask's development server for CLI commands and simple testing
+        print("Starting server with Flask dev server...")
+        app.run(host='127.0.0.1', port=5000, debug=True)

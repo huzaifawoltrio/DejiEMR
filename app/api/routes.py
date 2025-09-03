@@ -246,19 +246,54 @@ def test_auth():
 def get_all_users():
     return user_controller.get_all_users_list()
 
-@app.route('/authorize')
+# --- Google Calendar/Meet Integration Endpoints ---
+# REMOVED @jwt_required() from OAuth authorization endpoint - this is PUBLIC
+@api_bp.route('/google/authorize', methods=['GET'])
+@audit_log("GOOGLE_AUTH_INITIATE", "google")
 def authorize():
     return google_calendar_controller.authorize()
 
-@app.route('/oauth2callback')
+# OAuth callback endpoint should also be public - REMOVED @jwt_required()
+@api_bp.route('/google/oauth2callback', methods=['GET'])
 def oauth2callback():
     return google_calendar_controller.oauth2callback()
 
-@app.route('/create_event')
-def create_event():
-    return google_calendar_controller.create_google_meet_event()
+@api_bp.route('/google/status', methods=['GET'])
+@jwt_required()
+def check_google_status():
+    return google_calendar_controller.check_google_connection()
 
-# This new route creates a standalone meeting
+@api_bp.route('/google/disconnect', methods=['POST'])
+@jwt_required()
+@audit_log("GOOGLE_DISCONNECT", "google")
+def disconnect_google():
+    return google_calendar_controller.disconnect_google()
+
 @api_bp.route('/meetings', methods=['POST'])
+@jwt_required()
+@audit_log("CREATE_GOOGLE_MEET", "meetings")
 def create_meeting():
     return google_calendar_controller.create_google_meet_event()
+
+@api_bp.route('/meetings', methods=['GET'])
+@jwt_required()
+@audit_log("VIEW_MEETINGS", "meetings")
+def get_meetings():
+    return google_calendar_controller.get_meetings()
+
+@api_bp.route('/meetings/<string:event_id>/reschedule', methods=['PUT'])
+@jwt_required()
+@audit_log("RESCHEDULE_GOOGLE_MEET", "meetings")
+def reschedule_meeting(event_id):
+    data = request.get_json()
+    return google_calendar_controller.reschedule_event(
+        event_id, 
+        data.get('start_time'), 
+        data.get('end_time')
+    )
+
+@api_bp.route('/meetings/<string:event_id>/cancel', methods=['DELETE'])
+@jwt_required()
+@audit_log("CANCEL_GOOGLE_MEET", "meetings")
+def cancel_meeting(event_id):
+    return google_calendar_controller.cancel_event(event_id)

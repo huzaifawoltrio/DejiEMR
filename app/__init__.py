@@ -5,6 +5,8 @@ from app.utils.encryption_util import encryptor
 from app.utils.cloudinary_util import cloudinary_manager
 from app.utils.error_handlers import register_error_handlers
 from app.commands import register_commands
+from flask_cors import CORS
+
 from config import Config
 
 def create_app():
@@ -23,6 +25,7 @@ def create_app():
     socketio.init_app(app, cors_allowed_origins="*")
 
     
+    
     # Initialize custom utilities
     encryptor.init_app(app)
     cloudinary_manager.init_app(app)
@@ -30,6 +33,16 @@ def create_app():
     # Initialize app with config
     Config.init_app(app)
     
+    CORS(app, 
+         origins=[
+             "http://localhost:3000",  # Next.js development server
+             "http://127.0.0.1:3000",
+             "https://yourdomain.com"  # Add your production domain
+         ],
+         supports_credentials=True,  # Important for sessions
+         allow_headers=['Content-Type', 'Authorization', 'X-Requested-With'],
+         methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+    )
     # Register blueprints
     from app.api import api_bp
     app.register_blueprint(api_bp, url_prefix='/api')
