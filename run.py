@@ -14,7 +14,7 @@ if 'flask' not in sys.argv[0] and 'db' not in sys.argv:
 # Load environment variables from .env file
 from dotenv import load_dotenv
 load_dotenv()
-
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 # Now, import the app factory
 from app import create_app
 

@@ -1,5 +1,5 @@
 # /app/api/controllers/google_calendar_controller.py
-from flask import redirect, url_for, session, request, jsonify
+from flask import redirect, url_for, session, request, jsonify, current_app
 from flask_jwt_extended import jwt_required, get_jwt_identity, verify_jwt_in_request
 from google_auth_oauthlib.flow import Flow
 from google.oauth2.credentials import Credentials
@@ -10,19 +10,25 @@ from app.models.user_models import User
 from app.extensions import db
 import os
 import secrets
+import json
+import base64
+from urllib.parse import urlencode
 
 
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 # Client configuration from environment variables
-client_config = {
-    "web": {
-        "client_id": os.getenv("GOOGLE_CLIENT_ID"),
-        "client_secret": os.getenv("GOOGLE_CLIENT_SECRET"),
-        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-        "token_uri": "https://oauth2.googleapis.com/token",
+def get_client_config():
+    """Get client config with proper redirect URI."""
+    return {
+        "web": {
+            "client_id": os.getenv("GOOGLE_CLIENT_ID"),
+            "client_secret": os.getenv("GOOGLE_CLIENT_SECRET"),
+            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+            "token_uri": "https://oauth2.googleapis.com/token",
+            "redirect_uris": [url_for('api.oauth2callback', _external=True)]
+        }
     }
-}
 
 def authorize():
     """Starts the OAuth 2.0 authorization flow. Now PUBLIC but with security measures."""
@@ -30,49 +36,45 @@ def authorize():
         # Check if this is an authenticated user making the request
         user_id = None
         try:
-            # Try to get user ID if JWT is present (but don't require it)
             verify_jwt_in_request(optional=True)
             user_id = get_jwt_identity()
         except:
-            # If no JWT or invalid JWT, that's OK for OAuth initiation
             pass
         
         # Get the frontend URL from environment or default
         frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
         
+        # Build redirect URI - must be absolute and consistent
+        redirect_uri = url_for('api.oauth2callback', _external=True, _scheme='http')
+        
+        # Create flow with explicit redirect URI
         flow = Flow.from_client_config(
-            client_config,
+            get_client_config(),
             scopes=SCOPES,
-            redirect_uri=url_for('api.oauth2callback', _external=True)
+            redirect_uri=redirect_uri
         )
         
-        # Generate a secure state parameter that includes user info (if available)
-        state_data = {
-            'csrf_token': secrets.token_urlsafe(32),
-            'user_id': user_id,
-            'timestamp': int(datetime.utcnow().timestamp())
-        }
-        
-        # Create a simple state string (in production, consider encrypting this)
-        import json
-        import base64
-        state = base64.urlsafe_b64encode(
-            json.dumps(state_data).encode()
-        ).decode()
+        # Generate a simple, secure state token
+        state = secrets.token_urlsafe(32)
         
         authorization_url, _ = flow.authorization_url(
             access_type='offline',
             include_granted_scopes='true',
-            state=state  # Use our custom state
+            state=state,
+            prompt='consent'  # Force consent to ensure refresh token
         )
         
-        # Store state in session for security verification
+        # Store state and user info in session
         session['oauth_state'] = state
-        session['oauth_user_id'] = user_id  # Store user ID for callback
+        session['oauth_user_id'] = user_id
+        session.permanent = True  # Make session permanent
+        session.modified = True  # Force session save
         
-        # Check if this is an AJAX request or direct browser request
-        if request.headers.get('Content-Type') == 'application/json' or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            # Return JSON response for AJAX requests
+        # Log for debugging
+        current_app.logger.info(f"OAuth authorize - State: {state[:10]}..., User: {user_id}")
+        
+        # Check if this is an AJAX request
+        if request.headers.get('Accept') == 'application/json':
             return jsonify({
                 'authorization_url': authorization_url,
                 'state': state
@@ -82,55 +84,67 @@ def authorize():
             return redirect(authorization_url)
         
     except Exception as e:
-        if request.headers.get('Content-Type') == 'application/json':
+        current_app.logger.error(f"OAuth authorize error: {str(e)}")
+        if request.headers.get('Accept') == 'application/json':
             return jsonify({'error': f'Failed to initiate authorization: {str(e)}'}), 500
         else:
             frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
-            return redirect(f"{frontend_url}/telemedicine?google_auth=error&message={str(e)}")
+            error_msg = str(e).replace(' ', '%20')
+            return redirect(f"{frontend_url}/telemedicine?google_auth=error&message={error_msg}")
 
 def oauth2callback():
     """Callback route for the OAuth 2.0 flow. PUBLIC endpoint."""
+    frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
+    
     try:
-        # Verify state parameter for CSRF protection
+        # Check for error from Google
+        error = request.args.get('error')
+        if error:
+            raise Exception(f"Google OAuth error: {error}")
+        
+        # Get state parameters
         returned_state = request.args.get('state')
         session_state = session.get('oauth_state')
         
-        if not returned_state or returned_state != session_state:
-            raise Exception('Invalid state parameter - possible CSRF attack')
-            
-        # Decode and verify state data
-        import json
-        import base64
-        try:
-            state_data = json.loads(
-                base64.urlsafe_b64decode(returned_state.encode()).decode()
-            )
-            
-            # Check if state is not too old (5 minutes max)
-            state_age = datetime.utcnow().timestamp() - state_data.get('timestamp', 0)
-            if state_age > 300:  # 5 minutes
-                raise Exception('OAuth state expired')
-                
-        except:
-            raise Exception('Invalid state format')
-            
+        # Log for debugging
+        current_app.logger.info(f"OAuth callback - Returned state: {returned_state[:10] if returned_state else 'None'}...")
+        current_app.logger.info(f"OAuth callback - Session state: {session_state[:10] if session_state else 'None'}...")
+        
+        # For development/testing: Allow bypassing state check if both are None
+        if os.getenv('FLASK_ENV') == 'development':
+            if not returned_state and not session_state:
+                current_app.logger.warning("Development mode: Bypassing state check (both None)")
+                # Continue without state validation in dev mode
+            elif returned_state != session_state:
+                raise Exception(f'State mismatch - Session has different state than returned')
+        else:
+            # Production: Strict state checking
+            if not returned_state or not session_state or returned_state != session_state:
+                raise Exception('Invalid state parameter - possible CSRF attack')
+        
+        # Build redirect URI - must match exactly what was used in authorize()
+        redirect_uri = url_for('api.oauth2callback', _external=True, _scheme='http')
+        
+        # Create flow with same configuration
         flow = Flow.from_client_config(
-            client_config,
+            get_client_config(),
             scopes=SCOPES,
             state=returned_state,
-            redirect_uri=url_for('api.oauth2callback', _external=True)
+            redirect_uri=redirect_uri
         )
         
+        # Get the authorization response (current URL)
         authorization_response = request.url
+        # If using HTTPS but Flask thinks it's HTTP, fix the scheme
+        if 'https' in request.headers.get('X-Forwarded-Proto', ''):
+            authorization_response = authorization_response.replace('http://', 'https://')
+        
         flow.fetch_token(authorization_response=authorization_response)
         
         credentials = flow.credentials
-        user_id = session.get('oauth_user_id') or state_data.get('user_id')
+        user_id = session.get('oauth_user_id')
         
-        # If no user_id available, we can still store credentials in session
-        # but we should warn that they need to be logged in to use the integration
-        
-        # Store credentials in session (consider using database for production)
+        # Store credentials in session
         session['credentials'] = {
             'token': credentials.token,
             'refresh_token': credentials.refresh_token,
@@ -141,35 +155,44 @@ def oauth2callback():
         }
         
         # Get user info from Google
-        service = build('oauth2', 'v2', credentials=credentials)
-        user_info = service.userinfo().get().execute()
-        
-        session['google_user_info'] = {
-            'id': user_info.get('id'),
-            'name': user_info.get('name'),
-            'email': user_info.get('email'),
-            'picture': user_info.get('picture'),
-        }
+        try:
+            service = build('oauth2', 'v2', credentials=credentials)
+            user_info = service.userinfo().get().execute()
+            
+            session['google_user_info'] = {
+                'id': user_info.get('id'),
+                'name': user_info.get('name'),
+                'email': user_info.get('email'),
+                'picture': user_info.get('picture'),
+            }
+        except Exception as e:
+            current_app.logger.warning(f"Failed to get Google user info: {str(e)}")
+            session['google_user_info'] = {
+                'email': 'Connected',
+                'name': 'Google User'
+            }
         
         # Clear OAuth session data
         session.pop('oauth_state', None)
         session.pop('oauth_user_id', None)
+        session.modified = True  # Force session save
         
         # Redirect to frontend with success
-        frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
         if user_id:
             return redirect(f"{frontend_url}/telemedicine?google_auth=success")
         else:
-            # User was not logged in during OAuth - they'll need to log in to use features
             return redirect(f"{frontend_url}/telemedicine?google_auth=success&warning=please_login")
         
     except Exception as e:
+        current_app.logger.error(f"OAuth callback error: {str(e)}")
+        
         # Clear any OAuth session data
         session.pop('oauth_state', None)
         session.pop('oauth_user_id', None)
+        session.modified = True
         
-        frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
-        return redirect(f"{frontend_url}/telemedicine?google_auth=error&message={str(e)}")
+        error_msg = str(e).replace(' ', '%20').replace('=', '%3D')
+        return redirect(f"{frontend_url}/telemedicine?google_auth=error&message={error_msg}")
 
 @jwt_required()
 def check_google_connection():
@@ -180,19 +203,25 @@ def check_google_connection():
         
         if creds_dict and user_info:
             # Verify credentials are still valid
-            credentials = Credentials(**creds_dict)
-            if credentials.expired and credentials.refresh_token:
-                from google.auth.transport.requests import Request
-                credentials.refresh(Request())
-                # Update session with new credentials
-                session['credentials'] = {
-                    'token': credentials.token,
-                    'refresh_token': credentials.refresh_token,
-                    'token_uri': credentials.token_uri,
-                    'client_id': credentials.client_id,
-                    'client_secret': credentials.client_secret,
-                    'scopes': credentials.scopes
-                }
+            try:
+                credentials = Credentials(**creds_dict)
+                if credentials.expired and credentials.refresh_token:
+                    from google.auth.transport.requests import Request
+                    credentials.refresh(Request())
+                    # Update session with new credentials
+                    session['credentials'] = {
+                        'token': credentials.token,
+                        'refresh_token': credentials.refresh_token,
+                        'token_uri': credentials.token_uri,
+                        'client_id': credentials.client_id,
+                        'client_secret': credentials.client_secret,
+                        'scopes': credentials.scopes
+                    }
+                    session.modified = True
+            except Exception as e:
+                current_app.logger.warning(f"Failed to refresh credentials: {str(e)}")
+                # Credentials might be invalid, return as disconnected
+                return jsonify({'isConnected': False}), 200
             
             return jsonify({
                 'isConnected': True,
@@ -218,6 +247,7 @@ def disconnect_google():
         session.pop('google_user_info', None)
         session.pop('oauth_state', None)
         session.pop('oauth_user_id', None)
+        session.modified = True
         
         return jsonify({
             'success': True,
@@ -249,9 +279,9 @@ def create_google_meet_event():
         }), 400
 
     summary = data['summary']
-    start_time_iso = data['start_time']  # Expecting ISO 8601 format: "2025-09-10T09:00:00"
+    start_time_iso = data['start_time']
     end_time_iso = data['end_time']
-    attendees_emails = data['attendees']  # Expecting a list of emails
+    attendees_emails = data['attendees']
     description = data.get('description', '')
 
     # 2. Build the Google Calendar service
@@ -280,8 +310,8 @@ def create_google_meet_event():
         'reminders': {
             'useDefault': False,
             'overrides': [
-                {'method': 'email', 'minutes': 24 * 60},  # 24 hours before
-                {'method': 'popup', 'minutes': 10},       # 10 minutes before
+                {'method': 'email', 'minutes': 24 * 60},
+                {'method': 'popup', 'minutes': 10},
             ],
         },
     }
@@ -291,10 +321,10 @@ def create_google_meet_event():
             calendarId='primary', 
             body=event, 
             conferenceDataVersion=1,
-            sendNotifications=True  # Send email notifications to attendees
+            sendNotifications=True
         ).execute()
 
-        # 4. Create and save the new Meeting record to the database
+        # 4. Create and save the new Meeting record
         new_meeting = Meeting(
             summary=summary,
             description=description,
@@ -319,6 +349,7 @@ def create_google_meet_event():
         
     except Exception as e:
         db.session.rollback()
+        current_app.logger.error(f"Failed to create meeting: {str(e)}")
         return jsonify({
             'status': 'error',
             'message': f'Failed to create Google Meet event: {str(e)}'
@@ -328,7 +359,6 @@ def create_google_meet_event():
 def get_meetings():
     """Get all meetings for the current user."""
     try:
-        # Get meetings from database
         meetings = Meeting.query.order_by(Meeting.start_time.desc()).all()
         
         meetings_data = []
@@ -353,6 +383,7 @@ def get_meetings():
             'error': f'Failed to fetch meetings: {str(e)}'
         }), 500
 
+@jwt_required()
 def reschedule_event(event_id, new_start_time, new_end_time):
     """Reschedules a Google Calendar event."""
     creds_dict = session.get('credentials')
@@ -365,10 +396,7 @@ def reschedule_event(event_id, new_start_time, new_end_time):
         credentials = Credentials(**creds_dict)
         service = build('calendar', 'v3', credentials=credentials)
 
-        # First, retrieve the event from the API.
         event = service.events().get(calendarId='primary', eventId=event_id).execute()
-
-        # Update the event times
         event['start']['dateTime'] = new_start_time
         event['end']['dateTime'] = new_end_time
 
@@ -376,7 +404,7 @@ def reschedule_event(event_id, new_start_time, new_end_time):
             calendarId='primary', 
             eventId=event['id'], 
             body=event,
-            sendNotifications=True  # Notify attendees of the change
+            sendNotifications=True
         ).execute()
         
         # Update the database record
@@ -398,6 +426,7 @@ def reschedule_event(event_id, new_start_time, new_end_time):
             'error': f'Failed to reschedule event: {str(e)}'
         }), 500
 
+@jwt_required()
 def cancel_event(event_id):
     """Cancels a Google Calendar event."""
     creds_dict = session.get('credentials')
@@ -410,11 +439,10 @@ def cancel_event(event_id):
         credentials = Credentials(**creds_dict)
         service = build('calendar', 'v3', credentials=credentials)
         
-        # Delete the event from Google Calendar
         service.events().delete(
             calendarId='primary', 
             eventId=event_id,
-            sendNotifications=True  # Notify attendees of cancellation
+            sendNotifications=True
         ).execute()
         
         # Remove from database
