@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from app.models.google_meet_model import Meeting
 from app.models.user_models import User
 from app.extensions import db
+from app.utils.encryption_util import encryptor
 import os
 import secrets
 import json
@@ -262,7 +263,17 @@ def disconnect_google():
 
 @jwt_required()
 def create_google_meet_event():
-    """Creates a Google Calendar event from POST data and saves it as a Meeting."""
+    """Creates a Google Calendar event linked to a specific patient."""
+    doctor_id = get_jwt_identity()
+    doctor = User.query.get(doctor_id)
+    
+    # Verify doctor role
+    if not doctor or doctor.role.name != 'doctor':
+        return jsonify({
+            'status': 'error',
+            'message': 'Only doctors can create meetings.'
+        }), 403
+    
     creds_dict = session.get('credentials')
     if not creds_dict:
         return jsonify({
@@ -270,21 +281,50 @@ def create_google_meet_event():
             'message': 'Google account not connected. Please authorize first.'
         }), 401
 
-    # 1. Get meeting data from the request body
+    # Get meeting data from the request body
     data = request.get_json()
-    if not data or not all(k in data for k in ['summary', 'start_time', 'end_time', 'attendees']):
+    
+    # Updated required fields - now includes patient_id instead of manual attendees
+    required_fields = ['summary', 'start_time', 'end_time', 'patient_id']
+    if not data or not all(k in data for k in required_fields):
         return jsonify({
             'status': 'error', 
-            'message': 'Missing required fields: summary, start_time, end_time, attendees'
+            'message': 'Missing required fields: summary, start_time, end_time, patient_id'
         }), 400
 
     summary = data['summary']
     start_time_iso = data['start_time']
     end_time_iso = data['end_time']
-    attendees_emails = data['attendees']
+    patient_id = data['patient_id']
     description = data.get('description', '')
 
-    # 2. Build the Google Calendar service
+    # Verify the patient exists and is assigned to this doctor
+    patient = doctor.assigned_patients.filter_by(id=patient_id).first()
+    if not patient:
+        return jsonify({
+            'status': 'error',
+            'message': 'Patient not found or not assigned to you.'
+        }), 404
+
+    # Get patient's email for the meeting invitation
+    try:
+        patient_email = encryptor.decrypt(patient.email)
+        doctor_email = encryptor.decrypt(doctor.email)
+        patient_name = ""
+        if patient.patient_profile:
+            first_name = encryptor.decrypt(patient.patient_profile.first_name) if patient.patient_profile.first_name else ""
+            last_name = encryptor.decrypt(patient.patient_profile.last_name) if patient.patient_profile.last_name else ""
+            patient_name = f"{first_name} {last_name}".strip()
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': f'Failed to decrypt patient information: {str(e)}'
+        }), 500
+
+    # Build the attendees list (doctor + patient)
+    attendees_emails = [doctor_email, patient_email]
+
+    # Build the Google Calendar service
     try:
         credentials = Credentials(**creds_dict)
         service = build('calendar', 'v3', credentials=credentials)
@@ -294,15 +334,22 @@ def create_google_meet_event():
             'message': f'Failed to build calendar service: {str(e)}'
         }), 500
 
-    # 3. Construct the event payload
+    # Enhance the meeting summary and description with patient info
+    enhanced_summary = f"{summary}"
+    if patient_name:
+        enhanced_summary += f" - {patient_name}"
+    
+    enhanced_description = f"Meeting with patient: {patient_name}\n\n{description}" if patient_name else description
+
+    # Construct the event payload
     event = {
-        'summary': summary,
-        'description': description,
+        'summary': enhanced_summary,
+        'description': enhanced_description,
         'start': {'dateTime': start_time_iso, 'timeZone': 'UTC'},
         'end': {'dateTime': end_time_iso, 'timeZone': 'UTC'},
         'conferenceData': {
             'createRequest': {
-                'requestId': f'dejiemr-meeting-{int(datetime.utcnow().timestamp())}',
+                'requestId': f'dejiemr-meeting-{doctor_id}-{patient_id}-{int(datetime.utcnow().timestamp())}',
                 'conferenceSolutionKey': {'type': 'hangoutsMeet'}
             }
         },
@@ -324,27 +371,28 @@ def create_google_meet_event():
             sendNotifications=True
         ).execute()
 
-        # 4. Create and save the new Meeting record
+        # Create and save the new Meeting record with patient/doctor links
         new_meeting = Meeting(
-            summary=summary,
-            description=description,
+            summary=summary,  # Store original summary without patient name
+            description=description,  # Store original description
             start_time=datetime.fromisoformat(start_time_iso.replace('Z', '+00:00')),
             end_time=datetime.fromisoformat(end_time_iso.replace('Z', '+00:00')),
             attendees=attendees_emails,
             meet_link=created_event.get('hangoutLink', ''),
-            event_id=created_event.get('id')
+            event_id=created_event.get('id'),
+            doctor_id=doctor_id,
+            patient_id=patient_id
         )
         
         db.session.add(new_meeting)
         db.session.commit()
 
+        # Return detailed response with patient information
         return jsonify({
             'status': 'success',
-            'message': 'Meeting created and saved successfully.',
-            'meeting_id': new_meeting.id,
-            'meet_link': new_meeting.meet_link,
-            'event_link': created_event.get('htmlLink'),
-            'event_id': created_event.get('id')
+            'message': f'Meeting created successfully and linked to patient: {patient_name}',
+            'meeting': new_meeting.to_dict(include_patient_details=True, include_doctor_details=False),
+            'event_link': created_event.get('htmlLink')
         }), 201
         
     except Exception as e:
@@ -357,24 +405,28 @@ def create_google_meet_event():
 
 @jwt_required()
 def get_meetings():
-    """Get all meetings for the current user."""
+    """Get meetings based on user role - doctors see their meetings, patients see theirs."""
+    current_user_id = get_jwt_identity()
+    current_user = User.query.get(current_user_id)
+    
+    if not current_user:
+        return jsonify({'error': 'User not found'}), 404
+
     try:
-        meetings = Meeting.query.order_by(Meeting.start_time.desc()).all()
+        if current_user.role.name == 'doctor':
+            # Doctors see all meetings they've created
+            meetings = Meeting.query.filter_by(doctor_id=current_user_id).order_by(Meeting.start_time.desc()).all()
+            meetings_data = [meeting.to_dict(include_patient_details=True, include_doctor_details=False) for meeting in meetings]
         
-        meetings_data = []
-        for meeting in meetings:
-            meetings_data.append({
-                'id': meeting.id,
-                'summary': meeting.summary,
-                'description': meeting.description,
-                'start_time': meeting.start_time.isoformat(),
-                'end_time': meeting.end_time.isoformat(),
-                'attendees': meeting.attendees,
-                'meet_link': meeting.meet_link,
-                'event_id': meeting.event_id,
-                'created_at': meeting.created_at.isoformat(),
-                'updated_at': meeting.updated_at.isoformat()
-            })
+        elif current_user.role.name == 'patient':
+            # Patients see meetings they're assigned to
+            meetings = Meeting.query.filter_by(patient_id=current_user_id).order_by(Meeting.start_time.desc()).all()
+            meetings_data = [meeting.to_dict(include_patient_details=False, include_doctor_details=True) for meeting in meetings]
+        
+        else:
+            # Admin users see all meetings
+            meetings = Meeting.query.order_by(Meeting.start_time.desc()).all()
+            meetings_data = [meeting.to_dict(include_patient_details=True, include_doctor_details=True) for meeting in meetings]
         
         return jsonify(meetings_data), 200
         
@@ -384,8 +436,61 @@ def get_meetings():
         }), 500
 
 @jwt_required()
+def get_patient_meetings(patient_id):
+    """Get meetings for a specific patient (accessible by their doctor or the patient themselves)."""
+    current_user_id = get_jwt_identity()
+    current_user = User.query.get(current_user_id)
+    
+    if not current_user:
+        return jsonify({'error': 'User not found'}), 404
+
+    # Permission check
+    if current_user.role.name == 'doctor':
+        # Verify the patient is assigned to this doctor
+        patient = current_user.assigned_patients.filter_by(id=patient_id).first()
+        if not patient:
+            return jsonify({'error': 'Patient not found or not assigned to you'}), 404
+    elif current_user.role.name == 'patient':
+        # Patients can only see their own meetings
+        if int(current_user_id) != int(patient_id):
+            return jsonify({'error': 'Permission denied'}), 403
+    else:
+        # Admin access - verify patient exists
+        patient = User.query.get(patient_id)
+        if not patient or patient.role.name != 'patient':
+            return jsonify({'error': 'Patient not found'}), 404
+
+    try:
+        meetings = Meeting.query.filter_by(patient_id=patient_id).order_by(Meeting.start_time.desc()).all()
+        
+        # Include appropriate details based on who's requesting
+        if current_user.role.name == 'doctor':
+            meetings_data = [meeting.to_dict(include_patient_details=True, include_doctor_details=False) for meeting in meetings]
+        else:
+            meetings_data = [meeting.to_dict(include_patient_details=False, include_doctor_details=True) for meeting in meetings]
+        
+        return jsonify(meetings_data), 200
+        
+    except Exception as e:
+        return jsonify({
+            'error': f'Failed to fetch patient meetings: {str(e)}'
+        }), 500
+
+@jwt_required()
 def reschedule_event(event_id, new_start_time, new_end_time):
-    """Reschedules a Google Calendar event."""
+    """Reschedules a Google Calendar event (only by the doctor who created it)."""
+    current_user_id = get_jwt_identity()
+    current_user = User.query.get(current_user_id)
+    
+    # Find the meeting in our database
+    meeting = Meeting.query.filter_by(event_id=event_id).first()
+    if not meeting:
+        return jsonify({'error': 'Meeting not found'}), 404
+    
+    # Only the doctor who created the meeting can reschedule it
+    if current_user.role.name != 'doctor' or meeting.doctor_id != current_user_id:
+        return jsonify({'error': 'Only the doctor who created this meeting can reschedule it'}), 403
+
     creds_dict = session.get('credentials')
     if not creds_dict:
         return jsonify({
@@ -408,17 +513,16 @@ def reschedule_event(event_id, new_start_time, new_end_time):
         ).execute()
         
         # Update the database record
-        meeting = Meeting.query.filter_by(event_id=event_id).first()
-        if meeting:
-            meeting.start_time = datetime.fromisoformat(new_start_time.replace('Z', '+00:00'))
-            meeting.end_time = datetime.fromisoformat(new_end_time.replace('Z', '+00:00'))
-            meeting.updated_at = datetime.utcnow()
-            db.session.commit()
+        meeting.start_time = datetime.fromisoformat(new_start_time.replace('Z', '+00:00'))
+        meeting.end_time = datetime.fromisoformat(new_end_time.replace('Z', '+00:00'))
+        meeting.updated_at = datetime.utcnow()
+        db.session.commit()
         
         return jsonify({
             'updated_event_link': updated_event.get('htmlLink'),
             'meet_link': updated_event.get('hangoutLink'),
-            'message': 'Event rescheduled successfully'
+            'message': 'Event rescheduled successfully',
+            'meeting': meeting.to_dict(include_patient_details=True, include_doctor_details=False)
         }), 200
         
     except Exception as e:
@@ -428,7 +532,19 @@ def reschedule_event(event_id, new_start_time, new_end_time):
 
 @jwt_required()
 def cancel_event(event_id):
-    """Cancels a Google Calendar event."""
+    """Cancels a Google Calendar event (only by the doctor who created it)."""
+    current_user_id = get_jwt_identity()
+    current_user = User.query.get(current_user_id)
+    
+    # Find the meeting in our database
+    meeting = Meeting.query.filter_by(event_id=event_id).first()
+    if not meeting:
+        return jsonify({'error': 'Meeting not found'}), 404
+    
+    # Only the doctor who created the meeting can cancel it
+    if current_user.role.name != 'doctor' or meeting.doctor_id != current_user_id:
+        return jsonify({'error': 'Only the doctor who created this meeting can cancel it'}), 403
+
     creds_dict = session.get('credentials')
     if not creds_dict:
         return jsonify({
@@ -446,13 +562,11 @@ def cancel_event(event_id):
         ).execute()
         
         # Remove from database
-        meeting = Meeting.query.filter_by(event_id=event_id).first()
-        if meeting:
-            db.session.delete(meeting)
-            db.session.commit()
+        db.session.delete(meeting)
+        db.session.commit()
         
         return jsonify({
-            'message': 'Event canceled successfully.'
+            'message': 'Meeting canceled successfully.'
         }), 200
         
     except Exception as e:

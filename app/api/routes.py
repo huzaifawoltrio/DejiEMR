@@ -269,6 +269,7 @@ def check_google_status():
 def disconnect_google():
     return google_calendar_controller.disconnect_google()
 
+# --- Enhanced Meeting Endpoints with Patient Linking ---
 @api_bp.route('/meetings', methods=['POST'])
 @jwt_required()
 @audit_log("CREATE_GOOGLE_MEET", "meetings")
@@ -280,6 +281,12 @@ def create_meeting():
 @audit_log("VIEW_MEETINGS", "meetings")
 def get_meetings():
     return google_calendar_controller.get_meetings()
+
+@api_bp.route('/meetings/patient/<int:patient_id>', methods=['GET'])
+@jwt_required()
+@audit_log("VIEW_PATIENT_MEETINGS", "meetings")
+def get_patient_meetings_route(patient_id):
+    return google_calendar_controller.get_patient_meetings(patient_id)
 
 @api_bp.route('/meetings/<string:event_id>/reschedule', methods=['PUT'])
 @jwt_required()

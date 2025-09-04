@@ -10,6 +10,8 @@ class Config:
     # Security
     SECRET_KEY = os.environ.get('SECRET_KEY') or secrets.token_hex(32)
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY') or secrets.token_hex(32)
+    EMR_ENCRYPTION_KEY = os.environ.get('EMR_ENCRYPTION_KEY') 
+
 
     # Server configuration - Remove SERVER_NAME to avoid session issues
     # SERVER_NAME should only be set in production with a real domain
