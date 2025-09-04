@@ -327,28 +327,24 @@ def get_note_template(template_id):
 # --- Clinical Notes CRUD Endpoints ---
 @api_bp.route('/clinical-notes', methods=['POST'])
 @jwt_required()
-@require_permission('clinical_notes', 'write')
 @audit_log("CREATE_CLINICAL_NOTE", "clinical_notes")
 def create_clinical_note():
     return clinical_notes_controller.create_clinical_note()
 
 @api_bp.route('/clinical-notes/<int:note_id>', methods=['GET'])
 @jwt_required()
-@require_permission('clinical_notes', 'read')
 @audit_log("VIEW_CLINICAL_NOTE", "clinical_notes")
 def get_clinical_note(note_id):
     return clinical_notes_controller.get_clinical_note(note_id)
 
 @api_bp.route('/clinical-notes/<int:note_id>', methods=['PUT'])
 @jwt_required()
-@require_permission('clinical_notes', 'write')
 @audit_log("UPDATE_CLINICAL_NOTE", "clinical_notes")
 def update_clinical_note(note_id):
     return clinical_notes_controller.update_clinical_note(note_id)
 
 @api_bp.route('/clinical-notes/<int:note_id>', methods=['DELETE'])
 @jwt_required()
-@require_permission('clinical_notes', 'write')
 @audit_log("DELETE_CLINICAL_NOTE", "clinical_notes")
 def delete_clinical_note(note_id):
     return clinical_notes_controller.delete_clinical_note(note_id)
@@ -356,21 +352,18 @@ def delete_clinical_note(note_id):
 # --- Clinical Notes Actions ---
 @api_bp.route('/clinical-notes/<int:note_id>/sign', methods=['POST'])
 @jwt_required()
-@require_permission('clinical_notes', 'write')
 @audit_log("SIGN_CLINICAL_NOTE", "clinical_notes")
 def sign_clinical_note(note_id):
     return clinical_notes_controller.sign_clinical_note(note_id)
 
 @api_bp.route('/clinical-notes/<int:note_id>/amend', methods=['POST'])
 @jwt_required()
-@require_permission('clinical_notes', 'write')
 @audit_log("AMEND_CLINICAL_NOTE", "clinical_notes")
 def amend_clinical_note(note_id):
     return clinical_notes_controller.amend_clinical_note(note_id)
 
 @api_bp.route('/clinical-notes/<int:note_id>/amendments', methods=['GET'])
 @jwt_required()
-@require_permission('clinical_notes', 'read')
 @audit_log("VIEW_NOTE_AMENDMENTS", "clinical_notes")
 def get_note_amendments(note_id):
     return clinical_notes_controller.get_note_amendments(note_id)
@@ -378,7 +371,6 @@ def get_note_amendments(note_id):
 # --- Patient-specific Notes ---
 @api_bp.route('/patients/<int:patient_id>/clinical-notes', methods=['GET'])
 @jwt_required()
-@require_permission('clinical_notes', 'read')
 @audit_log("VIEW_PATIENT_NOTES", "clinical_notes")
 def get_patient_notes(patient_id):
     return clinical_notes_controller.get_patient_notes(patient_id)
@@ -386,7 +378,6 @@ def get_patient_notes(patient_id):
 # --- Appointment-specific Notes ---
 @api_bp.route('/appointments/<int:appointment_id>/clinical-notes', methods=['GET'])
 @jwt_required()
-@require_permission('clinical_notes', 'read')
 @audit_log("VIEW_APPOINTMENT_NOTES", "clinical_notes")
 def get_appointment_notes(appointment_id):
     return clinical_notes_controller.get_appointment_notes(appointment_id)
@@ -394,7 +385,6 @@ def get_appointment_notes(appointment_id):
 # --- Search Notes ---
 @api_bp.route('/clinical-notes/search', methods=['GET'])
 @jwt_required()
-@require_permission('clinical_notes', 'read')
 @audit_log("SEARCH_CLINICAL_NOTES", "clinical_notes")
 def search_notes():
     return clinical_notes_controller.search_notes()
