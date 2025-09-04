@@ -71,5 +71,32 @@ def init_db_command():
     
     click.echo("Database initialized successfully with roles and permissions!")
 
+@click.command('init-templates')
+@with_appcontext
+def init_templates_command():
+    """Initialize database with default clinical note templates."""
+    from app.models.clinical_notes_models import NoteTemplate, DEFAULT_TEMPLATES
+    
+    for template_data in DEFAULT_TEMPLATES:
+        # Check if template already exists
+        existing = NoteTemplate.query.filter_by(name=template_data['name']).first()
+        if not existing:
+            template = NoteTemplate(
+                name=template_data['name'],
+                description=template_data['description'],
+                note_type=template_data['note_type'],
+                schema=template_data['schema'],
+                is_active=True,
+                version='1.0'
+            )
+            db.session.add(template)
+            click.echo(f"Added template: {template_data['name']}")
+        else:
+            click.echo(f"Template already exists: {template_data['name']}")
+    
+    db.session.commit()
+    click.echo("Note templates initialized successfully!")
+
 def register_commands(app):
     app.cli.add_command(init_db_command)
+    app.cli.add_command(init_templates_command)  # Add this line    

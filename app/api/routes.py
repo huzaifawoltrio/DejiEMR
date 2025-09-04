@@ -6,6 +6,7 @@ from app.extensions import limiter
 from app.utils.decorators import audit_log, require_permission
 from .controllers import auth_controller, user_controller, patient_controller, doctor_controller, appointment_controller
 from app.api.controllers import google_calendar_controller
+from .controllers import clinical_notes_controller
 
 
 
@@ -304,3 +305,96 @@ def reschedule_meeting(event_id):
 @audit_log("CANCEL_GOOGLE_MEET", "meetings")
 def cancel_meeting(event_id):
     return google_calendar_controller.cancel_event(event_id)
+
+
+
+
+# --- Clinical Notes Endpoints -----------------------------------------
+
+# --- Clinical Notes Template Endpoints ---
+@api_bp.route('/clinical-notes/templates', methods=['GET'])
+@jwt_required()
+@audit_log("VIEW_NOTE_TEMPLATES", "clinical_notes")
+def get_note_templates():
+    return clinical_notes_controller.get_note_templates()
+
+@api_bp.route('/clinical-notes/templates/<int:template_id>', methods=['GET'])
+@jwt_required()
+@audit_log("VIEW_NOTE_TEMPLATE", "clinical_notes")
+def get_note_template(template_id):
+    return clinical_notes_controller.get_note_template(template_id)
+
+# --- Clinical Notes CRUD Endpoints ---
+@api_bp.route('/clinical-notes', methods=['POST'])
+@jwt_required()
+@require_permission('clinical_notes', 'write')
+@audit_log("CREATE_CLINICAL_NOTE", "clinical_notes")
+def create_clinical_note():
+    return clinical_notes_controller.create_clinical_note()
+
+@api_bp.route('/clinical-notes/<int:note_id>', methods=['GET'])
+@jwt_required()
+@require_permission('clinical_notes', 'read')
+@audit_log("VIEW_CLINICAL_NOTE", "clinical_notes")
+def get_clinical_note(note_id):
+    return clinical_notes_controller.get_clinical_note(note_id)
+
+@api_bp.route('/clinical-notes/<int:note_id>', methods=['PUT'])
+@jwt_required()
+@require_permission('clinical_notes', 'write')
+@audit_log("UPDATE_CLINICAL_NOTE", "clinical_notes")
+def update_clinical_note(note_id):
+    return clinical_notes_controller.update_clinical_note(note_id)
+
+@api_bp.route('/clinical-notes/<int:note_id>', methods=['DELETE'])
+@jwt_required()
+@require_permission('clinical_notes', 'write')
+@audit_log("DELETE_CLINICAL_NOTE", "clinical_notes")
+def delete_clinical_note(note_id):
+    return clinical_notes_controller.delete_clinical_note(note_id)
+
+# --- Clinical Notes Actions ---
+@api_bp.route('/clinical-notes/<int:note_id>/sign', methods=['POST'])
+@jwt_required()
+@require_permission('clinical_notes', 'write')
+@audit_log("SIGN_CLINICAL_NOTE", "clinical_notes")
+def sign_clinical_note(note_id):
+    return clinical_notes_controller.sign_clinical_note(note_id)
+
+@api_bp.route('/clinical-notes/<int:note_id>/amend', methods=['POST'])
+@jwt_required()
+@require_permission('clinical_notes', 'write')
+@audit_log("AMEND_CLINICAL_NOTE", "clinical_notes")
+def amend_clinical_note(note_id):
+    return clinical_notes_controller.amend_clinical_note(note_id)
+
+@api_bp.route('/clinical-notes/<int:note_id>/amendments', methods=['GET'])
+@jwt_required()
+@require_permission('clinical_notes', 'read')
+@audit_log("VIEW_NOTE_AMENDMENTS", "clinical_notes")
+def get_note_amendments(note_id):
+    return clinical_notes_controller.get_note_amendments(note_id)
+
+# --- Patient-specific Notes ---
+@api_bp.route('/patients/<int:patient_id>/clinical-notes', methods=['GET'])
+@jwt_required()
+@require_permission('clinical_notes', 'read')
+@audit_log("VIEW_PATIENT_NOTES", "clinical_notes")
+def get_patient_notes(patient_id):
+    return clinical_notes_controller.get_patient_notes(patient_id)
+
+# --- Appointment-specific Notes ---
+@api_bp.route('/appointments/<int:appointment_id>/clinical-notes', methods=['GET'])
+@jwt_required()
+@require_permission('clinical_notes', 'read')
+@audit_log("VIEW_APPOINTMENT_NOTES", "clinical_notes")
+def get_appointment_notes(appointment_id):
+    return clinical_notes_controller.get_appointment_notes(appointment_id)
+
+# --- Search Notes ---
+@api_bp.route('/clinical-notes/search', methods=['GET'])
+@jwt_required()
+@require_permission('clinical_notes', 'read')
+@audit_log("SEARCH_CLINICAL_NOTES", "clinical_notes")
+def search_notes():
+    return clinical_notes_controller.search_notes()
