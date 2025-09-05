@@ -388,3 +388,42 @@ def get_appointment_notes(appointment_id):
 @audit_log("SEARCH_CLINICAL_NOTES", "clinical_notes")
 def search_notes():
     return clinical_notes_controller.search_notes()
+
+
+
+# --- Patient Document Management Endpoints ---
+@api_bp.route('/patients/documents/upload', methods=['POST'])
+@jwt_required()
+@audit_log("UPLOAD_PATIENT_DOCUMENT", "documents")
+def upload_patient_document_route():
+    from .controllers import patient_document_controller
+    return patient_document_controller.upload_patient_document()
+
+@api_bp.route('/patients/<int:patient_id>/documents', methods=['GET'])
+@jwt_required()
+@audit_log("VIEW_PATIENT_DOCUMENTS", "documents")
+def get_patient_documents_route(patient_id):
+    from .controllers import patient_document_controller
+    return patient_document_controller.get_patient_documents(patient_id)
+
+@api_bp.route('/documents/<int:document_id>', methods=['GET'])
+@jwt_required()
+@audit_log("VIEW_DOCUMENT", "documents")
+def get_document_route(document_id):
+    from .controllers import patient_document_controller
+    return patient_document_controller.get_document_by_id(document_id)
+
+@api_bp.route('/documents/<int:document_id>', methods=['DELETE'])
+@jwt_required()
+@audit_log("DELETE_PATIENT_DOCUMENT", "documents")
+def delete_patient_document_route(document_id):
+    from .controllers import patient_document_controller
+    return patient_document_controller.delete_patient_document(document_id)
+
+@api_bp.route('/documents/search', methods=['GET'])
+@jwt_required()
+@audit_log("SEARCH_PATIENT_DOCUMENTS", "documents")
+def search_patient_documents_route():
+    from .controllers import patient_document_controller
+    return patient_document_controller.search_patient_documents()
+

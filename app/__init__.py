@@ -7,6 +7,8 @@ from app.commands import register_commands
 from flask_cors import CORS
 import os
 from config import Config
+from app.models.patient_document_models import PatientDocument
+
 # Don't import Flask-Session - use Flask's built-in sessions instead
 
 def create_app():

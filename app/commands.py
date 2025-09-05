@@ -97,6 +97,21 @@ def init_templates_command():
     db.session.commit()
     click.echo("Note templates initialized successfully!")
 
+
+@click.command('init-documents')
+@with_appcontext
+def init_documents_command():
+    """Initialize database with patient documents table."""
+    from app.models.patient_document_models import PatientDocument
+    
+    # Create the patient_documents table
+    db.create_all()
+    
+    click.echo("Patient documents table initialized successfully!")
+
+
 def register_commands(app):
     app.cli.add_command(init_db_command)
     app.cli.add_command(init_templates_command)  # Add this line    
+    app.cli.add_command(init_documents_command)
+
