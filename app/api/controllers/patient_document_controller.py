@@ -1,5 +1,5 @@
 # /app/api/controllers/patient_document_controller.py
-from flask import request, jsonify
+from flask import request, jsonify, current_app
 from flask_jwt_extended import get_jwt_identity
 from app.extensions import db
 from app.models.user_models import User
@@ -33,7 +33,6 @@ def upload_patient_document():
     has_permission = False
     
     # Add some debugging info
-    from flask import current_app
     current_app.logger.info(f"Upload attempt: User {current_user_id} (role: {current_user.role.name}) trying to upload for patient {patient_id}")
     
     if current_user.role.name == 'doctor':
@@ -69,9 +68,22 @@ def upload_patient_document():
     upload_result = cloudinary_manager.upload_patient_document(
         file, patient_id, current_user_id, description
     )
+
+    current_app.logger.info(f"Cloudinary upload result: {upload_result}")
     
     if not upload_result['success']:
         return jsonify({'error': upload_result['error']}), 400
+    
+    # Ensure we have a file_type - this is the critical fix
+    file_type = upload_result.get('format')
+    if not file_type:
+        # Fallback: extract from original filename
+        if '.' in file.filename:
+            file_type = file.filename.rsplit('.', 1)[1].lower()
+        else:
+            file_type = 'unknown'  # Fallback value
+    
+    current_app.logger.info(f"Final file_type being saved: '{file_type}'")
     
     # Save document metadata to database
     try:
@@ -80,7 +92,7 @@ def upload_patient_document():
             uploaded_by=current_user_id,
             file_name=file.filename,
             file_url=upload_result['url'],
-            file_type=upload_result['format'],
+            file_type=file_type,  # This should now never be None
             file_size=upload_result['bytes'],
             cloudinary_public_id=upload_result['public_id'],
             description=description,
@@ -90,6 +102,8 @@ def upload_patient_document():
         db.session.add(document)
         db.session.commit()
         
+        current_app.logger.info(f"Document saved successfully with ID: {document.id}")
+        
         return jsonify({
             'message': 'Document uploaded successfully',
             'document': document.to_dict()
@@ -97,6 +111,8 @@ def upload_patient_document():
         
     except Exception as e:
         db.session.rollback()
+        current_app.logger.error(f"Database save error: {str(e)}")
+        
         # Clean up uploaded file if database save fails
         try:
             cloudinary_manager.delete_patient_document(upload_result['public_id'])

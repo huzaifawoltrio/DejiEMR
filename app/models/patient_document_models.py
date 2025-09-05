@@ -17,6 +17,8 @@ class PatientDocument(db.Model):
     file_size = db.Column(db.Integer, nullable=False)      # Size in bytes
     cloudinary_public_id = db.Column(db.String(255), nullable=False)  # For deletion
     
+
+    
     # Document details
     description = db.Column(db.Text)
     tags = db.Column(db.Text)  # Comma-separated string
